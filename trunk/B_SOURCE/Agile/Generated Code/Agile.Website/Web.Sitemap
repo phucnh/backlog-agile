@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  
+    <siteMapNode url="" title="Admin"  description="">
+        <siteMapNode url="~/Admin/Default.aspx" title="Admin"  description="Admin" />  
+	<siteMapNode url="~/Admin/ActionType.aspx" title="Action Type"  description="" />
+	<siteMapNode url="~/Admin/DieAttachFile.aspx" title="Die Attach File"  description="" />
+	<siteMapNode url="~/Admin/DieCategory.aspx" title="Die Category"  description="" />
+	<siteMapNode url="~/Admin/DieHistory.aspx" title="Die History"  description="" />
+	<siteMapNode url="~/Admin/DieRequest.aspx" title="Die Request"  description="" />
+	<siteMapNode url="~/Admin/DieStatus.aspx" title="Die Status"  description="" />
+	<siteMapNode url="~/Admin/DieType.aspx" title="Die Type"  description="" />
+	<siteMapNode url="~/Admin/MileStole.aspx" title="Mile Stole"  description="" />
+	<siteMapNode url="~/Admin/PriorityDieRequest.aspx" title="Priority Die Request"  description="" />
+	<siteMapNode url="~/Admin/Project.aspx" title="Project"  description="" />
+	<siteMapNode url="~/Admin/Release.aspx" title="Release"  description="" />
+	<siteMapNode url="~/Admin/Resolutions.aspx" title="Resolutions"  description="" />
+	<siteMapNode url="~/Admin/User.aspx" title="User"  description="" />
+        </siteMapNode>              
+</siteMap>

@@ -1,0 +1,306 @@
+﻿body
+{
+    background-color: #FFFFFF;
+    font-family: Verdana;
+    font-size: 11px;
+}
+
+.wrapper
+{
+    width: 100%;
+}
+
+.main_menu
+{
+    padding: 12px 30px 5px 5px;
+    width: 100%;
+}
+
+.main_search
+{
+    background-color: #EBF0DF;
+    height: 30px;
+    padding-top: 4px;
+    padding-left: 70%;
+}
+
+
+.header
+{
+    display: block;
+}
+
+.home_header
+{
+    padding: 10px 0px 0px 20px;
+    font-size: 16px;
+    font-weight: normal;
+    height: 25px;
+    width: 80%;
+    background: -webkit-gradient(linear, 0% 0%,0% 558%, from(white), to(gray));
+    color: #CC0000;
+}
+
+.login_view
+{
+    width: 30%;
+    float: right;
+    text-align: right;
+    font-size: small;
+}
+
+.login_view a
+{
+}
+
+.main_block
+{
+}
+
+.main_block .header
+{
+    border-radius: 9px 9px 0px 0px;
+    height: 25px;
+    background-color: #006600;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+.main_block .footer
+{
+    border-radius: 0px 0px 9px 9px;
+    height: 10px;
+    background-color: #E4E4E4;
+}
+
+.main_block .content
+{
+    background-color: #E4E4E4;
+    min-height: 100px;
+}
+
+.main_block_item
+{
+    height: 30px;
+    vertical-align: middle;
+    margin: 0px 25px 0px 5%;
+    width: 80%;
+    font-size: 13px;
+}
+
+.issue_header
+{
+    background-color: #C2DD73;
+    height: 25px;
+    color: #008000;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.issue_header a
+{
+    font-weight: normal;
+    text-decoration: underline;
+    color: #008000;
+}
+
+.issue_row
+{
+    border-style: dashed groove dashed hidden;
+    border-width: 1px;
+    border-color: #C0C0C0;
+    background-color: #F8F8F8;
+    color: black;
+    font-weight: normal;
+    height: 40px;
+    min-height: 30px;
+    vertical-align: text-bottom;
+    text-align: center;
+    border-spacing: 1px;
+    overflow: auto;
+}
+
+.issue_row a
+{
+    font-weight: normal;
+    text-decoration: underline;
+    color: black;
+}
+
+.issue_alternating_row
+{
+    border-style: dashed groove dashed hidden;
+    border-width: 1px;
+    border-color: #C0C0C0;
+    background-color: #F0F0F0;
+    color: black;
+    font-weight: normal;
+    height: 40px;
+    min-height: 30px;
+    vertical-align: text-bottom;
+    text-align: center;
+    border-spacing: 1px;
+    overflow: auto;
+}
+
+.issue_alternating_row a
+{
+    font-weight: normal;
+    text-decoration: underline;
+    color: black;
+}
+
+.issue_pagger
+{
+    border-style: hidden;
+    border-spacing: 2px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.issue_pagger a
+{
+    font-weight: normal;
+    text-decoration: underline;
+    color: #008000;
+}
+
+.conditions
+{
+    font-weight: bold;
+}
+
+.conditions a
+{
+    color: Green;
+}
+
+.conditions .header
+{
+    background-color: #81B419;
+}
+
+.conditions .field
+{
+    background-color: #EBF0DF;
+}
+
+.add_issue_wrapper
+{
+    border-style: solid;
+    border-width: 1px;
+    background-color: #F9F8E3;
+    width: 80%;
+    text-align: center;
+}
+
+.add_issue_wrapper .section
+{
+    font-weight: bold;
+}
+
+.add_issue_wrapper .section .subsection
+{
+    font-weight: normal;
+    background-color: white;
+    text-align: left;
+    height: 55px;
+    width: 96%;
+    margin-left: 2%;
+    vertical-align: middle;
+}
+
+.add_issue_wrapper .section .subsection .left_column
+{
+    width: 48%;
+    float: left;
+    height: 40px;
+    margin-left: 2%;
+    margin-top: 10px;
+}
+
+.add_issue_wrapper .section .subsection .right_column
+{
+    width: 48%;
+    float: left;
+    height: 40px;
+    margin-top: 10px;
+}
+
+.home_issue_header
+{
+    display: block;
+}
+
+.home_issue_row
+{
+    border-style: dashed hidden dashed hidden;
+    border-width: 1px;
+    border-color: #C0C0C0;
+    background-color: #F8F8F8;
+    color: black;
+    font-weight: normal;
+    height: 43px;
+    min-height: 30px;
+    vertical-align: text-top;
+    text-align: center;
+    border-spacing: 1px;
+    overflow: auto;
+}
+
+.home_issue_alternating_row
+{
+    border-style: dashed hidden dashed hidden;
+    border-width: 1px;
+    border-color: #C0C0C0;
+    background-color: #F0F0F0;
+    color: black;
+    font-weight: normal;
+    height: 43px;
+    min-height: 30px;
+    vertical-align: text-bottom;
+    text-align: center;
+    border-spacing: 1px;
+    overflow: auto;
+}
+
+.home_group_row
+{
+    border-style: dashed hidden groove hidden;
+    background-color: #81B31A;
+    border-color: #C0C0C0;
+    border-width: 1px;
+    height: 28px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+}
+
+.home_issue_subject_cell
+{
+    border-style: dashed hidden groove hidden;
+    text-align: left;
+}
+
+.home_issue_pagger
+{
+}
+
+.attribute_header
+{
+    float: left;
+    width: 20%;
+}
+
+.attribute_input
+{
+    float: left;
+}
+
+.link_selected
+{   
+    font-style: oblique;
+}

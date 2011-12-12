@@ -1,0 +1,239 @@
+<NetTiersReport DALNameSpace="Agile.Data" SolutionLink="file:\\\C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Generated Code\Agile.sln" ConnectionString="Data Source=127.0.0.1;Initial Catalog=backlog;User ID=sa;Password=sa" FactoryType="Agile.Entities.EntityFactory">
+  <initialization startTime="129680244663137628" executionTime="00:00:04.3692499">
+    <Message level="0" startTime="129680244663157629" message="Validating parameters." />
+    <Message level="0" startTime="129680244666587825" message="Loading templates." executionTime="00:00:03.6242073" />
+    <Message level="0" startTime="129680244702829898" message="Creating folders and copying dependencies." />
+  </initialization>
+  <customStoredProcedures includeCustoms="true" />
+  <common startTime="129680244706830127" executionTime="00:00:10.9806281">
+    <File name="ListBase.cs" startTime="129680244706850128" />
+    <File name="TList.cs" startTime="129680244708080199" />
+    <File name="VList.cs" startTime="129680244708700234" />
+    <File name="TestUtility.cs" startTime="129680244709040254" />
+    <File name="IEntity.cs" startTime="129680244709810298" />
+    <File name="IEntityId.cs" startTime="129680244710110315" />
+    <File name="IEntityKey.cs" startTime="129680244710500337" />
+    <File name="EntityFactory.cs" startTime="129680244710660346" />
+    <File name="EntityFactoryBase.cs" startTime="129680244710780353" />
+    <File name="IEntityFactory.cs" startTime="129680244711090371" />
+    <File name="IEntityCacheItem.cs" startTime="129680244711440391" />
+    <File name="EntityCache.cs" startTime="129680244711590399" />
+    <File name="EntityLocator.cs" startTime="129680244711780410" />
+    <File name="EntityManager.cs" startTime="129680244712400446" />
+    <File name="BrokenRule.cs" startTime="129680244713120487" />
+    <File name="BrokenRulesList.cs" startTime="129680244713300497" />
+    <File name="CommonRules.cs" startTime="129680244713480508" />
+    <File name="ValidationRuleArgs.cs" startTime="129680244714590571" />
+    <File name="ValidationRuleHandler.cs" startTime="129680244714880588" />
+    <File name="ValidationRuleInfo.cs" startTime="129680244715130602" />
+    <File name="ValidationRules.cs" startTime="129680244715330613" />
+    <File name="EntityBaseCore.generated.cs" startTime="129680244715600629" />
+    <File name="EntityKeyBaseCore.generated.cs" startTime="129680244716020653" />
+    <File name="SecurityContextBase.generated.cs" startTime="129680244716210664" />
+    <File name="ContextView.cs" startTime="129680244716440677" />
+    <File name="IProcessor.cs" startTime="129680244716650689" />
+    <File name="IProcessorResult.cs" startTime="129680244716820699" />
+    <File name="ProcessorBase.cs" startTime="129680244717250723" />
+    <File name="GenericProcessorResult.cs" startTime="129680244717420733" />
+    <File name="DomainUtil.cs" startTime="129680244717780754" />
+    <File name="IConnectionScope.cs" startTime="129680244717970764" />
+    <File name="ConnectionScope.cs" startTime="129680244718100772" />
+    <File name="ConnectionScopeBase.cs" startTime="129680244718340786" />
+    <File name="IComponentService.cs" startTime="129680244718490794" />
+    <File name="ServiceBaseCore.cst.cs" startTime="129680244718810812" />
+    <File name="ServiceViewBaseCore.cst.cs" startTime="129680244719350843" />
+    <File name="ServiceResult.cs" startTime="129680244720130888" />
+    <File name="EntityFilter.cs" startTime="129680244720330899" />
+    <File name="EntityPropertyComparer.cs" startTime="129680244721330957" />
+    <File name="GenericTypeConverter.cs" startTime="129680244721440963" />
+    <File name="Procedures.xml" startTime="129680244721600972" />
+    <File name="Utility.cs" startTime="129680244738631946" />
+    <File name="ITransactionManager.cs" startTime="129680244739081972" />
+    <File name="TransactionManager.cs" startTime="129680244739391990" />
+    <File name="DataRepository.cs" startTime="129680244740082029" />
+    <File name="IEntityProvider.cs" startTime="129680244741112088" />
+    <File name="IEntityViewProvider.cs" startTime="129680244742072143" />
+    <File name="EntityProviderBaseCore.generated.cs" startTime="129680244742332158" />
+    <File name="EntityViewProviderBaseCore.generated.cs" startTime="129680244744482281" />
+    <File name="INetTiersProvider.cs" startTime="129680244745112317" />
+    <File name="NetTiersProvider.cs" startTime="129680244745552342" />
+    <File name="NetTiersProviderBase.cs" startTime="129680244745922363" />
+    <File name="NetTiersProviderCollection.cs" startTime="129680244746602402" />
+    <File name="NetTiersServiceSection.cs" startTime="129680244747222438" />
+    <File name="ExpressionParserBase.cs" startTime="129680244747882475" />
+    <File name="SqlExpressionParser.cs" startTime="129680244748222495" />
+    <File name="SqlStringBuilder.cs" startTime="129680244748572515" />
+    <File name="SqlUtil.cs" startTime="129680244751142662" />
+    <File name="StringTokenizer.cs" startTime="129680244752212723" />
+    <File name="SqlClient\SqlNetTiersProvider.cs" startTime="129680244752562743" />
+    <File name="StoredProcedureProvider.cs" startTime="129680244753512797" />
+    <File name="BaseDataSource.cs" startTime="129680244754142833" />
+    <File name="BaseDataSourceDesigner.cs" startTime="129680244756362960" />
+    <File name="CustomDataSource.cs" startTime="129680244756652977" />
+    <File name="CustomDataSourceDesigner.cs" startTime="129680244757373018" />
+    <File name="CustomParameter.cs" startTime="129680244757913049" />
+    <File name="DataParameter.cs" startTime="129680244758403077" />
+    <File name="EntityDataSource.cs" startTime="129680244758803100" />
+    <File name="EntityDataSourceFilter.cs" startTime="129680244760103174" />
+    <File name="EntityRelationship.cs" startTime="129680244760653206" />
+    <File name="EntityRelationshipMember.cs" startTime="129680244760963223" />
+    <File name="EntityTransactionModule.cs" startTime="129680244761653263" />
+    <File name="ILinkedDataSource.cs" startTime="129680244762333302" />
+    <File name="ManyToManyListRelationship.cs" startTime="129680244762963338" />
+    <File name="ManyToManyViewRelationship.cs" startTime="129680244763563372" />
+    <File name="OneToManyGridRelationship.cs" startTime="129680244764113404" />
+    <File name="OneToOneViewRelationship.cs" startTime="129680244764533428" />
+    <File name="ProviderDataSource.cs" startTime="129680244765063458" />
+    <File name="ProviderDataSourceDesigner.cs" startTime="129680244765773499" />
+    <File name="ReadOnlyDataSource.cs" startTime="129680244766443537" />
+    <File name="ReadOnlyDataSourceDesigner.cs" startTime="129680244767023570" />
+    <File name="SqlParameter.cs" startTime="129680244767643606" />
+    <File name="ActionTypeDataSource.cs" startTime="129680244768263641" />
+    <File name="PriorityDieRequestDataSource.cs" startTime="129680244769173693" />
+    <File name="ProjectDataSource.cs" startTime="129680244769563715" />
+    <File name="ReleaseDataSource.cs" startTime="129680244769943737" />
+    <File name="ResolutionsDataSource.cs" startTime="129680244770483768" />
+    <File name="MileStoleDataSource.cs" startTime="129680244770813787" />
+    <File name="DieTypeDataSource.cs" startTime="129680244771243811" />
+    <File name="DieStatusDataSource.cs" startTime="129680244771673836" />
+    <File name="DieCategoryDataSource.cs" startTime="129680244772223868" />
+    <File name="DieAttachFileDataSource.cs" startTime="129680244772593889" />
+    <File name="DieHistoryDataSource.cs" startTime="129680244772753898" />
+    <File name="UserDataSource.cs" startTime="129680244773273928" />
+    <File name="DieRequestDataSource.cs" startTime="129680244773603946" />
+    <File name="HomeDieRequestDataSource.cs" startTime="129680244774293986" />
+    <File name="FormUtilBase.generated.cs" startTime="129680244775604061" />
+    <File name="MultiBindableTemplate.cs" startTime="129680244777084146" />
+    <File name="MultiFormView.cs" startTime="129680244777314159" />
+    <File name="EntityGridView.cs" startTime="129680244777664179" />
+    <File name="EntityDropDownList.cs" startTime="129680244778744240" />
+    <File name="BoundEntityDropDownField.cs" startTime="129680244779364276" />
+    <File name="BoundRadioButtonField.cs" startTime="129680244779704295" />
+    <File name="GridViewSearchPanel.cs" startTime="129680244780054315" />
+    <File name="GridViewSearchPanelState.cs" startTime="129680244781194381" />
+    <File name="EntityLabel.cs" startTime="129680244781754413" />
+    <File name="HyperlinkField.cs" startTime="129680244782434452" />
+    <File name="ActionTypeRepeater.cs" startTime="129680244783024485" />
+    <File name="PriorityDieRequestRepeater.cs" startTime="129680244783614519" />
+    <File name="ProjectRepeater.cs" startTime="129680244783864533" />
+    <File name="ReleaseRepeater.cs" startTime="129680244784204553" />
+    <File name="ResolutionsRepeater.cs" startTime="129680244784564573" />
+    <File name="MileStoleRepeater.cs" startTime="129680244784904593" />
+    <File name="DieTypeRepeater.cs" startTime="129680244785354619" />
+    <File name="DieStatusRepeater.cs" startTime="129680244785824645" />
+    <File name="DieCategoryRepeater.cs" startTime="129680244786294672" />
+    <File name="DieAttachFileRepeater.cs" startTime="129680244786874705" />
+    <File name="DieHistoryRepeater.cs" startTime="129680244787364734" />
+    <File name="UserRepeater.cs" startTime="129680244787884763" />
+    <File name="DieRequestRepeater.cs" startTime="129680244787994770" />
+    <File name="HomeDieRequestRepeater.cs" startTime="129680244788484798" />
+    <File name="Services.csproj" startTime="129680244809846019" />
+    <File name="Agile.Entities.csproj" startTime="129680244812106149" />
+    <File name="Agile.Data.Data.csproj" startTime="129680244812626178" />
+    <File name="Agile.Entities.Data.SqlClient.csproj" startTime="129680244813156209" />
+    <File name="Agile.Web.csproj" startTime="129680244813726241" />
+    <File name="EntityHelper.cs" startTime="129680244814306274" />
+    <File name="EntityUtil.cs" startTime="129680244815056317" />
+  </common>
+  <Table name="HomeDIERequest" startTime="129680244816646408" executionTime="00:00:00.4070233">
+    <File name="HomeDieRequestBase.generated.cs" startTime="129680244816666409" />
+    <File name="HomeDieRequestProviderBase.generatedCore.cs" startTime="129680244817826476" executionTime="00:00:00.1100063" />
+    <File name="SqlHomeDieRequestProviderBase.generated.cs" startTime="129680244818936539" />
+    <File name="HomeDieRequestServiceBase.generated.cs" startTime="129680244819736585" executionTime="00:00:00.0980056" />
+  </Table>
+  <Table name="tblActionType" startTime="129680244820716641" executionTime="00:00:00.7660438">
+    <File name="ActionType.generated.cs" startTime="129680244820726642" executionTime="00:00:00.2020115" />
+    <File name="IActionType.cs" startTime="129680244822756758" executionTime="00:00:00.0540031" />
+    <File name="ActionTypeServiceBase.generated.cs" startTime="129680244823306789" executionTime="00:00:00.1760101" />
+    <File name="ActionTypeProviderBase.generatedCore.cs" startTime="129680244825076891" executionTime="00:00:00.1900108" />
+    <File name="SqlClient\SqlActionTypeProviderBase.generated.cs" startTime="129680244826987000" executionTime="00:00:00.1390079" />
+  </Table>
+  <Table name="tblDIEAttachFile" startTime="129680244828377079" executionTime="00:00:00.3300189">
+    <File name="DieAttachFile.generated.cs" startTime="129680244828377079" executionTime="00:00:00.0810047" />
+    <File name="IDieAttachFile.cs" startTime="129680244829197126" executionTime="00:00:00.0260015" />
+    <File name="DieAttachFileServiceBase.generated.cs" startTime="129680244829467142" executionTime="00:00:00.1150065" />
+    <File name="DieAttachFileProviderBase.generatedCore.cs" startTime="129680244830627208" executionTime="00:00:00.0480027" />
+    <File name="SqlClient\SqlDieAttachFileProviderBase.generated.cs" startTime="129680244831107235" executionTime="00:00:00.0570033" />
+  </Table>
+  <Table name="tblDIECategory" startTime="129680244831677268" executionTime="00:00:00.3790217">
+    <File name="DieCategory.generated.cs" startTime="129680244831677268" executionTime="00:00:00.0790045" />
+    <File name="IDieCategory.cs" startTime="129680244832467313" executionTime="00:00:00.0430025" />
+    <File name="DieCategoryServiceBase.generated.cs" startTime="129680244832907338" executionTime="00:00:00.0680039" />
+    <File name="DieCategoryProviderBase.generatedCore.cs" startTime="129680244833587377" executionTime="00:00:00.0450026" />
+    <File name="SqlClient\SqlDieCategoryProviderBase.generated.cs" startTime="129680244834047404" executionTime="00:00:00.1410080" />
+  </Table>
+  <Table name="tblDIEHistory" startTime="129680244835467485" executionTime="00:00:00.3880222">
+    <File name="DieHistory.generated.cs" startTime="129680244835467485" executionTime="00:00:00.1360078" />
+    <File name="IDieHistory.cs" startTime="129680244836837563" executionTime="00:00:00.0270016" />
+    <File name="DieHistoryServiceBase.generated.cs" startTime="129680244837117579" executionTime="00:00:00.1230071" />
+    <File name="DieHistoryProviderBase.generatedCore.cs" startTime="129680244838357650" executionTime="00:00:00.0480028" />
+    <File name="SqlClient\SqlDieHistoryProviderBase.generated.cs" startTime="129680244838847678" executionTime="00:00:00.0500029" />
+  </Table>
+  <Table name="tblDIERequest" startTime="129680244839347707" executionTime="00:00:00.4820275">
+    <File name="DieRequest.generated.cs" startTime="129680244839357707" executionTime="00:00:00.1300075" />
+    <File name="IDieRequest.cs" startTime="129680244840667782" executionTime="00:00:00.0160009" />
+    <File name="DieRequestServiceBase.generated.cs" startTime="129680244840837792" executionTime="00:00:00.1150066" />
+    <File name="DieRequestProviderBase.generatedCore.cs" startTime="129680244841987858" executionTime="00:00:00.1290074" />
+    <File name="SqlClient\SqlDieRequestProviderBase.generated.cs" startTime="129680244843287932" executionTime="00:00:00.0880050" />
+  </Table>
+  <Table name="tblDIEStatus" startTime="129680244844167982" executionTime="00:00:00.3550204">
+    <File name="DieStatus.generated.cs" startTime="129680244844177983" executionTime="00:00:00.1160066" />
+    <File name="IDieStatus.cs" startTime="129680244845348050" executionTime="00:00:00.0290017" />
+    <File name="DieStatusServiceBase.generated.cs" startTime="129680244845648067" executionTime="00:00:00.1170067" />
+    <File name="DieStatusProviderBase.generatedCore.cs" startTime="129680244846828135" executionTime="00:00:00.0360020" />
+    <File name="SqlClient\SqlDieStatusProviderBase.generated.cs" startTime="129680244847198156" executionTime="00:00:00.0520030" />
+  </Table>
+  <Table name="tblDIEType" startTime="129680244847718186" executionTime="00:00:00.3190182">
+    <File name="DieType.generated.cs" startTime="129680244847728186" executionTime="00:00:00.1260072" />
+    <File name="IDieType.cs" startTime="129680244848988258" executionTime="00:00:00.0300017" />
+    <File name="DieTypeServiceBase.generated.cs" startTime="129680244849298276" executionTime="00:00:00.0830047" />
+    <File name="DieTypeProviderBase.generatedCore.cs" startTime="129680244850138324" executionTime="00:00:00.0500029" />
+    <File name="SqlClient\SqlDieTypeProviderBase.generated.cs" startTime="129680244850648353" executionTime="00:00:00.0260015" />
+  </Table>
+  <Table name="tblMileStole" startTime="129680244850918369" executionTime="00:00:00.1660095">
+    <File name="MileStole.generated.cs" startTime="129680244850918369" executionTime="00:00:00.0500028" />
+    <File name="IMileStole.cs" startTime="129680244851428398" executionTime="00:00:00.0090005" />
+    <File name="MileStoleServiceBase.generated.cs" startTime="129680244851528403" executionTime="00:00:00.0490028" />
+    <File name="MileStoleProviderBase.generatedCore.cs" startTime="129680244852028432" executionTime="00:00:00.0300017" />
+    <File name="SqlClient\SqlMileStoleProviderBase.generated.cs" startTime="129680244852338450" executionTime="00:00:00.0240014" />
+  </Table>
+  <Table name="tblPriorityDIERequest" startTime="129680244852578464" executionTime="00:00:00.3040173">
+    <File name="PriorityDieRequest.generated.cs" startTime="129680244852588464" executionTime="00:00:00.0750043" />
+    <File name="IPriorityDieRequest.cs" startTime="129680244853338507" executionTime="00:00:00.0090005" />
+    <File name="PriorityDieRequestServiceBase.generated.cs" startTime="129680244853438513" executionTime="00:00:00.0470027" />
+    <File name="PriorityDieRequestProviderBase.generatedCore.cs" startTime="129680244853918540" executionTime="00:00:00.0290017" />
+    <File name="SqlClient\SqlPriorityDieRequestProviderBase.generated.cs" startTime="129680244854208557" executionTime="00:00:00.1400080" />
+  </Table>
+  <Table name="tblProject" startTime="129680244855618637" executionTime="00:00:00.4090234">
+    <File name="Project.generated.cs" startTime="129680244855618637" executionTime="00:00:00.2600149" />
+    <File name="IProject.cs" startTime="129680244858228787" executionTime="00:00:00.0610035" />
+    <File name="ProjectServiceBase.generated.cs" startTime="129680244858848822" executionTime="00:00:00.0450026" />
+    <File name="ProjectProviderBase.generatedCore.cs" startTime="129680244859308848" executionTime="00:00:00.0190011" />
+    <File name="SqlClient\SqlProjectProviderBase.generated.cs" startTime="129680244859508860" executionTime="00:00:00.0200011" />
+  </Table>
+  <Table name="tblRelease" startTime="129680244859708871" executionTime="00:00:00.1560090">
+    <File name="Release.generated.cs" startTime="129680244859718872" executionTime="00:00:00.0630036" />
+    <File name="IRelease.cs" startTime="129680244860358909" executionTime="00:00:00.0090005" />
+    <File name="ReleaseServiceBase.generated.cs" startTime="129680244860458914" executionTime="00:00:00.0360021" />
+    <File name="ReleaseProviderBase.generatedCore.cs" startTime="129680244860828935" executionTime="00:00:00.0240014" />
+    <File name="SqlClient\SqlReleaseProviderBase.generated.cs" startTime="129680244861068949" executionTime="00:00:00.0200012" />
+  </Table>
+  <Table name="tblResolutions" startTime="129680244861268961" executionTime="00:00:00.1180067">
+    <File name="Resolutions.generated.cs" startTime="129680244861278961" executionTime="00:00:00.0340020" />
+    <File name="IResolutions.cs" startTime="129680244861628981" executionTime="00:00:00.0090005" />
+    <File name="ResolutionsServiceBase.generated.cs" startTime="129680244861728987" executionTime="00:00:00.0360021" />
+    <File name="ResolutionsProviderBase.generatedCore.cs" startTime="129680244862099008" executionTime="00:00:00.0170010" />
+    <File name="SqlClient\SqlResolutionsProviderBase.generated.cs" startTime="129680244862279018" executionTime="00:00:00.0160010" />
+  </Table>
+  <Table name="tblUser" startTime="129680244862449028" executionTime="00:00:00.1950112">
+    <File name="User.generated.cs" startTime="129680244862449028" executionTime="00:00:00.0700040" />
+    <File name="IUser.cs" startTime="129680244863149068" executionTime="00:00:00.0120007" />
+    <File name="UserServiceBase.generated.cs" startTime="129680244863299077" executionTime="00:00:00.0420024" />
+    <File name="UserProviderBase.generatedCore.cs" startTime="129680244863729101" executionTime="00:00:00.0370021" />
+    <File name="SqlClient\SqlUserProviderBase.generated.cs" startTime="129680244864109123" executionTime="00:00:00.0290017" />
+  </Table>
+  <summary>
+    <objectCount>198</objectCount>
+    <messageCount>0</messageCount>
+  </summary>
+</NetTiersReport>

@@ -1,0 +1,61 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Master.master.cs" Inherits="Agile.Share.Master" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div class="wrapper">
+        <div class="header">
+            <div class="main_menu">
+                <telerik:RadMenu ID="MainMenu" runat="server" DataSourceID="SiteMapDataSource1" DataNavigateUrlField="Url"
+                    DataTextField="Title" DataValueField="Url">
+                </telerik:RadMenu>
+            </div>
+            <div class="login_view">
+                <asp:LoginView ID="LoginView1" runat="server">
+                    <AnonymousTemplate>
+                        <asp:HyperLink ID="hplLogin" runat="server" Text="Login" NavigateUrl="~/Share/Login.aspx" />
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        <asp:LoginName ID="LoginName1" runat="server" FormatString="Hello {0} | " />
+                        <asp:HyperLink ID="hplLogout" runat="server" NavigateUrl="~/Share/Logout.aspx" Text="Logout" />
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
+            <br />
+            <br />
+            <asp:Panel runat="server" ID="SearchPanel" CssClass="main_search" DefaultButton="btnSearchIssue">
+                <telerik:RadTextBox runat="server" ID="txtSearchIssue" Width="280px" />
+                <telerik:RadButton runat="server" Text="Search" ID="btnSearchIssue" OnClick="btnSearchIssue_Click" />
+            </asp:Panel>
+        </div>
+        <br />
+        <telerik:RadScriptManager ID="RadScriptManager1" runat="server" EnableScriptLocalization="True">
+        </telerik:RadScriptManager>
+        <%--<div class="login_view">
+                <asp:LoginView ID="MainLoginView" runat="server">
+                    <AnonymousTemplate>--%>
+        <%--<asp:HyperLink ID="hplLogin" runat="server" Text="Login" NavigateUrl="~/Share/Login.aspx" />--%>
+        <%--<asp:LoginStatus ID="LoginStatus1" runat="server" />
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        <asp:LoginName ID="LoginName1" runat="server" FormatString="Hello {0} | " />
+                        <asp:LoginStatus ID="LoginStatus1" runat="server" />
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
+        <div>--%>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" ShowStartingNode="False" />
+        <div id="footer">
+        </div>
+    </div>
+    </form>
+</body>
+</html>

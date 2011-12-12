@@ -1,0 +1,9 @@
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\Agile.dll
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\Agile.pdb
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\System.Web.Extensions.dll
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\Telerik.Web.Design.dll
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\Telerik.Web.UI.dll
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\bin\Telerik.Web.UI.xml
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\obj\Debug\Agile.dll
+C:\Users\PHUC\Documents\Visual Studio 2010\Projects\C#\Agile\Agile\obj\Debug\Agile.pdb

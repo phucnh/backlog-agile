@@ -1,0 +1,5590 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type='text/xsl' href="scriptsql.xsl"?>
+<root xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database includeDrop="true">backlog</database>
+<procedures>
+		
+		<procedure owner="dbo" name="tblActionType_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblActionType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[ActionTypeID],
+					[ActionTypeName]
+				FROM
+					[dbo].[tblActionType]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblActionType_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblActionType table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ActionTypeID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([ActionTypeID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [ActionTypeID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblActionType]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[ActionTypeID], O.[ActionTypeName]
+				FROM
+				    [dbo].[tblActionType] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[ActionTypeID] = PageIndex.[ActionTypeID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblActionType]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblActionType_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblActionType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ActionTypeId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ActionTypeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblActionType]
+					(
+					[ActionTypeName]
+					)
+				VALUES
+					(
+					@ActionTypeName
+					)
+				
+				-- Get the identity value
+				SET @ActionTypeId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblActionType_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblActionType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ActionTypeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblActionType]
+				SET
+					[ActionTypeName] = @ActionTypeName
+				WHERE
+[ActionTypeID] = @ActionTypeId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblActionType_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblActionType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblActionType] WITH (ROWLOCK) 
+				WHERE
+					[ActionTypeID] = @ActionTypeId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblActionType_GetByActionTypeId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblActionType table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[ActionTypeID],
+					[ActionTypeName]
+				FROM
+					[dbo].[tblActionType]
+				WHERE
+					[ActionTypeID] = @ActionTypeId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblActionType_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblActionType table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ActionTypeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [ActionTypeID]
+	, [ActionTypeName]
+    FROM
+	[dbo].[tblActionType]
+    WHERE 
+	 ([ActionTypeID] = @ActionTypeId OR @ActionTypeId IS NULL)
+	AND ([ActionTypeName] = @ActionTypeName OR @ActionTypeName IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [ActionTypeID]
+	, [ActionTypeName]
+    FROM
+	[dbo].[tblActionType]
+    WHERE 
+	 ([ActionTypeID] = @ActionTypeId AND @ActionTypeId is not null)
+	OR ([ActionTypeName] = @ActionTypeName AND @ActionTypeName is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblActionType_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblActionType table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ActionTypeID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [ActionTypeID] )
+				SELECT TOP {3} [ActionTypeID]
+				FROM [dbo].[tblActionType] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[ActionTypeID], O.[ActionTypeName]
+				FROM
+				    [dbo].[tblActionType] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[ActionTypeID] = PageIndex.[ActionTypeID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblActionType] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblPriorityDIERequest_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblPriorityDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[PriorityDIERequestID],
+					[PriorityDIERequestName],
+					[PriorityDIERequestDescription],
+					[Color],
+					[ColorName],
+					[PriorityDIERequestOrder]
+				FROM
+					[dbo].[tblPriorityDIERequest]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblPriorityDIERequest_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblPriorityDIERequest table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [PriorityDIERequestID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([PriorityDIERequestID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [PriorityDIERequestID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblPriorityDIERequest]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[PriorityDIERequestID], O.[PriorityDIERequestName], O.[PriorityDIERequestDescription], O.[Color], O.[ColorName], O.[PriorityDIERequestOrder]
+				FROM
+				    [dbo].[tblPriorityDIERequest] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[PriorityDIERequestID] = PageIndex.[PriorityDIERequestID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblPriorityDIERequest]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblPriorityDIERequest_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblPriorityDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PriorityDieRequestName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@PriorityDieRequestDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault=""/>
+				<parameter name="@Color" type="nchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@ColorName" type="nvarchar" direction="Input" size="150" precision="0" scale="0" param="(150)" nulldefault=""/>
+				<parameter name="@PriorityDieRequestOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblPriorityDIERequest]
+					(
+					[PriorityDIERequestName]
+					,[PriorityDIERequestDescription]
+					,[Color]
+					,[ColorName]
+					,[PriorityDIERequestOrder]
+					)
+				VALUES
+					(
+					@PriorityDieRequestName
+					,@PriorityDieRequestDescription
+					,@Color
+					,@ColorName
+					,@PriorityDieRequestOrder
+					)
+				
+				-- Get the identity value
+				SET @PriorityDieRequestId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblPriorityDIERequest_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblPriorityDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PriorityDieRequestName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@PriorityDieRequestDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault=""/>
+				<parameter name="@Color" type="nchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@ColorName" type="nvarchar" direction="Input" size="150" precision="0" scale="0" param="(150)" nulldefault=""/>
+				<parameter name="@PriorityDieRequestOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblPriorityDIERequest]
+				SET
+					[PriorityDIERequestName] = @PriorityDieRequestName
+					,[PriorityDIERequestDescription] = @PriorityDieRequestDescription
+					,[Color] = @Color
+					,[ColorName] = @ColorName
+					,[PriorityDIERequestOrder] = @PriorityDieRequestOrder
+				WHERE
+[PriorityDIERequestID] = @PriorityDieRequestId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblPriorityDIERequest_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblPriorityDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblPriorityDIERequest] WITH (ROWLOCK) 
+				WHERE
+					[PriorityDIERequestID] = @PriorityDieRequestId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblPriorityDIERequest_GetByPriorityDieRequestId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblPriorityDIERequest table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[PriorityDIERequestID],
+					[PriorityDIERequestName],
+					[PriorityDIERequestDescription],
+					[Color],
+					[ColorName],
+					[PriorityDIERequestOrder]
+				FROM
+					[dbo].[tblPriorityDIERequest]
+				WHERE
+					[PriorityDIERequestID] = @PriorityDieRequestId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblPriorityDIERequest_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblPriorityDIERequest table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@PriorityDieRequestName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault="null"/>
+				<parameter name="@PriorityDieRequestDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Color" type="nchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault="null"/>
+				<parameter name="@ColorName" type="nvarchar" direction="Input" size="150" precision="0" scale="0" param="(150)" nulldefault="null"/>
+				<parameter name="@PriorityDieRequestOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [PriorityDIERequestID]
+	, [PriorityDIERequestName]
+	, [PriorityDIERequestDescription]
+	, [Color]
+	, [ColorName]
+	, [PriorityDIERequestOrder]
+    FROM
+	[dbo].[tblPriorityDIERequest]
+    WHERE 
+	 ([PriorityDIERequestID] = @PriorityDieRequestId OR @PriorityDieRequestId IS NULL)
+	AND ([PriorityDIERequestName] = @PriorityDieRequestName OR @PriorityDieRequestName IS NULL)
+	AND ([Color] = @Color OR @Color IS NULL)
+	AND ([ColorName] = @ColorName OR @ColorName IS NULL)
+	AND ([PriorityDIERequestOrder] = @PriorityDieRequestOrder OR @PriorityDieRequestOrder IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [PriorityDIERequestID]
+	, [PriorityDIERequestName]
+	, [PriorityDIERequestDescription]
+	, [Color]
+	, [ColorName]
+	, [PriorityDIERequestOrder]
+    FROM
+	[dbo].[tblPriorityDIERequest]
+    WHERE 
+	 ([PriorityDIERequestID] = @PriorityDieRequestId AND @PriorityDieRequestId is not null)
+	OR ([PriorityDIERequestName] = @PriorityDieRequestName AND @PriorityDieRequestName is not null)
+	OR ([Color] = @Color AND @Color is not null)
+	OR ([ColorName] = @ColorName AND @ColorName is not null)
+	OR ([PriorityDIERequestOrder] = @PriorityDieRequestOrder AND @PriorityDieRequestOrder is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblPriorityDIERequest_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblPriorityDIERequest table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [PriorityDIERequestID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [PriorityDIERequestID] )
+				SELECT TOP {3} [PriorityDIERequestID]
+				FROM [dbo].[tblPriorityDIERequest] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[PriorityDIERequestID], O.[PriorityDIERequestName], O.[PriorityDIERequestDescription], O.[Color], O.[ColorName], O.[PriorityDIERequestOrder]
+				FROM
+				    [dbo].[tblPriorityDIERequest] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[PriorityDIERequestID] = PageIndex.[PriorityDIERequestID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblPriorityDIERequest] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblProject_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblProject table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[ProjectID],
+					[ProjectName],
+					[StartDate],
+					[Deadline],
+					[Description],
+					[Active]
+				FROM
+					[dbo].[tblProject]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblProject_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblProject table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ProjectID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([ProjectID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [ProjectID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblProject]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[ProjectID], O.[ProjectName], O.[StartDate], O.[Deadline], O.[Description], O.[Active]
+				FROM
+				    [dbo].[tblProject] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[ProjectID] = PageIndex.[ProjectID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblProject]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblProject_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblProject table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ProjectId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectName" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault=""/>
+				<parameter name="@StartDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Deadline" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblProject]
+					(
+					[ProjectName]
+					,[StartDate]
+					,[Deadline]
+					,[Description]
+					,[Active]
+					)
+				VALUES
+					(
+					@ProjectName
+					,@StartDate
+					,@Deadline
+					,@Description
+					,@Active
+					)
+				
+				-- Get the identity value
+				SET @ProjectId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblProject_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblProject table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectName" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault=""/>
+				<parameter name="@StartDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Deadline" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblProject]
+				SET
+					[ProjectName] = @ProjectName
+					,[StartDate] = @StartDate
+					,[Deadline] = @Deadline
+					,[Description] = @Description
+					,[Active] = @Active
+				WHERE
+[ProjectID] = @ProjectId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblProject_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblProject table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblProject] WITH (ROWLOCK) 
+				WHERE
+					[ProjectID] = @ProjectId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblProject_GetByProjectId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblProject table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[ProjectID],
+					[ProjectName],
+					[StartDate],
+					[Deadline],
+					[Description],
+					[Active]
+				FROM
+					[dbo].[tblProject]
+				WHERE
+					[ProjectID] = @ProjectId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblProject_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblProject table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectName" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault="null"/>
+				<parameter name="@StartDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@Deadline" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault="null"/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [ProjectID]
+	, [ProjectName]
+	, [StartDate]
+	, [Deadline]
+	, [Description]
+	, [Active]
+    FROM
+	[dbo].[tblProject]
+    WHERE 
+	 ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+	AND ([ProjectName] = @ProjectName OR @ProjectName IS NULL)
+	AND ([StartDate] = @StartDate OR @StartDate IS NULL)
+	AND ([Deadline] = @Deadline OR @Deadline IS NULL)
+	AND ([Description] = @Description OR @Description IS NULL)
+	AND ([Active] = @Active OR @Active IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [ProjectID]
+	, [ProjectName]
+	, [StartDate]
+	, [Deadline]
+	, [Description]
+	, [Active]
+    FROM
+	[dbo].[tblProject]
+    WHERE 
+	 ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	OR ([ProjectName] = @ProjectName AND @ProjectName is not null)
+	OR ([StartDate] = @StartDate AND @StartDate is not null)
+	OR ([Deadline] = @Deadline AND @Deadline is not null)
+	OR ([Description] = @Description AND @Description is not null)
+	OR ([Active] = @Active AND @Active is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblProject_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblProject table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ProjectID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [ProjectID] )
+				SELECT TOP {3} [ProjectID]
+				FROM [dbo].[tblProject] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[ProjectID], O.[ProjectName], O.[StartDate], O.[Deadline], O.[Description], O.[Active]
+				FROM
+				    [dbo].[tblProject] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[ProjectID] = PageIndex.[ProjectID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblProject] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblRelease_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblRelease table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[ReleaseID],
+					[ProjectID],
+					[ReleaseDate],
+					[ReleaseName],
+					[ReleaseNote],
+					[Active],
+					[UserID],
+					[LastUserUpdate],
+					[LastDateUpdate]
+				FROM
+					[dbo].[tblRelease]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblRelease_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblRelease table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ReleaseID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([ReleaseID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [ReleaseID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblRelease]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[ReleaseID], O.[ProjectID], O.[ReleaseDate], O.[ReleaseName], O.[ReleaseNote], O.[Active], O.[UserID], O.[LastUserUpdate], O.[LastDateUpdate]
+				FROM
+				    [dbo].[tblRelease] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[ReleaseID] = PageIndex.[ReleaseID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblRelease]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblRelease_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblRelease table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ReleaseId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ReleaseDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@ReleaseName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@ReleaseNote" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastDateUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblRelease]
+					(
+					[ProjectID]
+					,[ReleaseDate]
+					,[ReleaseName]
+					,[ReleaseNote]
+					,[Active]
+					,[UserID]
+					,[LastUserUpdate]
+					,[LastDateUpdate]
+					)
+				VALUES
+					(
+					@ProjectId
+					,@ReleaseDate
+					,@ReleaseName
+					,@ReleaseNote
+					,@Active
+					,@UserId
+					,@LastUserUpdate
+					,@LastDateUpdate
+					)
+				
+				-- Get the identity value
+				SET @ReleaseId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblRelease_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblRelease table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ReleaseDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@ReleaseName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@ReleaseNote" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastDateUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblRelease]
+				SET
+					[ProjectID] = @ProjectId
+					,[ReleaseDate] = @ReleaseDate
+					,[ReleaseName] = @ReleaseName
+					,[ReleaseNote] = @ReleaseNote
+					,[Active] = @Active
+					,[UserID] = @UserId
+					,[LastUserUpdate] = @LastUserUpdate
+					,[LastDateUpdate] = @LastDateUpdate
+				WHERE
+[ReleaseID] = @ReleaseId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblRelease_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblRelease table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblRelease] WITH (ROWLOCK) 
+				WHERE
+					[ReleaseID] = @ReleaseId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblRelease_GetByReleaseId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblRelease table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[ReleaseID],
+					[ProjectID],
+					[ReleaseDate],
+					[ReleaseName],
+					[ReleaseNote],
+					[Active],
+					[UserID],
+					[LastUserUpdate],
+					[LastDateUpdate]
+				FROM
+					[dbo].[tblRelease]
+				WHERE
+					[ReleaseID] = @ReleaseId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblRelease_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblRelease table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ReleaseDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@ReleaseName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault="null"/>
+				<parameter name="@ReleaseNote" type="nvarchar" direction="Input" size="255" precision="0" scale="0" param="(255)" nulldefault="null"/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@LastDateUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [ReleaseID]
+	, [ProjectID]
+	, [ReleaseDate]
+	, [ReleaseName]
+	, [ReleaseNote]
+	, [Active]
+	, [UserID]
+	, [LastUserUpdate]
+	, [LastDateUpdate]
+    FROM
+	[dbo].[tblRelease]
+    WHERE 
+	 ([ReleaseID] = @ReleaseId OR @ReleaseId IS NULL)
+	AND ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+	AND ([ReleaseDate] = @ReleaseDate OR @ReleaseDate IS NULL)
+	AND ([ReleaseName] = @ReleaseName OR @ReleaseName IS NULL)
+	AND ([ReleaseNote] = @ReleaseNote OR @ReleaseNote IS NULL)
+	AND ([Active] = @Active OR @Active IS NULL)
+	AND ([UserID] = @UserId OR @UserId IS NULL)
+	AND ([LastUserUpdate] = @LastUserUpdate OR @LastUserUpdate IS NULL)
+	AND ([LastDateUpdate] = @LastDateUpdate OR @LastDateUpdate IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [ReleaseID]
+	, [ProjectID]
+	, [ReleaseDate]
+	, [ReleaseName]
+	, [ReleaseNote]
+	, [Active]
+	, [UserID]
+	, [LastUserUpdate]
+	, [LastDateUpdate]
+    FROM
+	[dbo].[tblRelease]
+    WHERE 
+	 ([ReleaseID] = @ReleaseId AND @ReleaseId is not null)
+	OR ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	OR ([ReleaseDate] = @ReleaseDate AND @ReleaseDate is not null)
+	OR ([ReleaseName] = @ReleaseName AND @ReleaseName is not null)
+	OR ([ReleaseNote] = @ReleaseNote AND @ReleaseNote is not null)
+	OR ([Active] = @Active AND @Active is not null)
+	OR ([UserID] = @UserId AND @UserId is not null)
+	OR ([LastUserUpdate] = @LastUserUpdate AND @LastUserUpdate is not null)
+	OR ([LastDateUpdate] = @LastDateUpdate AND @LastDateUpdate is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblRelease_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblRelease table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ReleaseID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [ReleaseID] )
+				SELECT TOP {3} [ReleaseID]
+				FROM [dbo].[tblRelease] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[ReleaseID], O.[ProjectID], O.[ReleaseDate], O.[ReleaseName], O.[ReleaseNote], O.[Active], O.[UserID], O.[LastUserUpdate], O.[LastDateUpdate]
+				FROM
+				    [dbo].[tblRelease] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[ReleaseID] = PageIndex.[ReleaseID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblRelease] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblResolutions_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblResolutions table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[ResolutionsID],
+					[ResolutionsName]
+				FROM
+					[dbo].[tblResolutions]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblResolutions_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblResolutions table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ResolutionsID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([ResolutionsID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [ResolutionsID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblResolutions]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[ResolutionsID], O.[ResolutionsName]
+				FROM
+				    [dbo].[tblResolutions] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[ResolutionsID] = PageIndex.[ResolutionsID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblResolutions]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblResolutions_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblResolutions table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ResolutionsId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ResolutionsName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblResolutions]
+					(
+					[ResolutionsName]
+					)
+				VALUES
+					(
+					@ResolutionsName
+					)
+				
+				-- Get the identity value
+				SET @ResolutionsId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblResolutions_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblResolutions table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ResolutionsName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblResolutions]
+				SET
+					[ResolutionsName] = @ResolutionsName
+				WHERE
+[ResolutionsID] = @ResolutionsId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblResolutions_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblResolutions table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblResolutions] WITH (ROWLOCK) 
+				WHERE
+					[ResolutionsID] = @ResolutionsId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblResolutions_GetByResolutionsId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblResolutions table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[ResolutionsID],
+					[ResolutionsName]
+				FROM
+					[dbo].[tblResolutions]
+				WHERE
+					[ResolutionsID] = @ResolutionsId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblResolutions_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblResolutions table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ResolutionsName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [ResolutionsID]
+	, [ResolutionsName]
+    FROM
+	[dbo].[tblResolutions]
+    WHERE 
+	 ([ResolutionsID] = @ResolutionsId OR @ResolutionsId IS NULL)
+	AND ([ResolutionsName] = @ResolutionsName OR @ResolutionsName IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [ResolutionsID]
+	, [ResolutionsName]
+    FROM
+	[dbo].[tblResolutions]
+    WHERE 
+	 ([ResolutionsID] = @ResolutionsId AND @ResolutionsId is not null)
+	OR ([ResolutionsName] = @ResolutionsName AND @ResolutionsName is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblResolutions_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblResolutions table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [ResolutionsID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [ResolutionsID] )
+				SELECT TOP {3} [ResolutionsID]
+				FROM [dbo].[tblResolutions] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[ResolutionsID], O.[ResolutionsName]
+				FROM
+				    [dbo].[tblResolutions] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[ResolutionsID] = PageIndex.[ResolutionsID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblResolutions] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblMileStole_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblMileStole table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[MileStoleID],
+					[MileStoleName],
+					[OriginalDueDate],
+					[RevisedDueDate],
+					[CompleteDate],
+					[Progress],
+					[ProjectID],
+					[Enabled],
+					[MileStoleOrder]
+				FROM
+					[dbo].[tblMileStole]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblMileStole_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblMileStole table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [MileStoleID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([MileStoleID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [MileStoleID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblMileStole]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[MileStoleID], O.[MileStoleName], O.[OriginalDueDate], O.[RevisedDueDate], O.[CompleteDate], O.[Progress], O.[ProjectID], O.[Enabled], O.[MileStoleOrder]
+				FROM
+				    [dbo].[tblMileStole] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[MileStoleID] = PageIndex.[MileStoleID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblMileStole]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblMileStole_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblMileStole table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@MileStoleId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@MileStoleName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@OriginalDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@RevisedDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CompleteDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Progress" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Enabled" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@MileStoleOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblMileStole]
+					(
+					[MileStoleName]
+					,[OriginalDueDate]
+					,[RevisedDueDate]
+					,[CompleteDate]
+					,[Progress]
+					,[ProjectID]
+					,[Enabled]
+					,[MileStoleOrder]
+					)
+				VALUES
+					(
+					@MileStoleName
+					,@OriginalDueDate
+					,@RevisedDueDate
+					,@CompleteDate
+					,@Progress
+					,@ProjectId
+					,@Enabled
+					,@MileStoleOrder
+					)
+				
+				-- Get the identity value
+				SET @MileStoleId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblMileStole_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblMileStole table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@MileStoleId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@MileStoleName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@OriginalDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@RevisedDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CompleteDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@Progress" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Enabled" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@MileStoleOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblMileStole]
+				SET
+					[MileStoleName] = @MileStoleName
+					,[OriginalDueDate] = @OriginalDueDate
+					,[RevisedDueDate] = @RevisedDueDate
+					,[CompleteDate] = @CompleteDate
+					,[Progress] = @Progress
+					,[ProjectID] = @ProjectId
+					,[Enabled] = @Enabled
+					,[MileStoleOrder] = @MileStoleOrder
+				WHERE
+[MileStoleID] = @MileStoleId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblMileStole_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblMileStole table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@MileStoleId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblMileStole] WITH (ROWLOCK) 
+				WHERE
+					[MileStoleID] = @MileStoleId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblMileStole_GetByMileStoleId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblMileStole table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@MileStoleId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[MileStoleID],
+					[MileStoleName],
+					[OriginalDueDate],
+					[RevisedDueDate],
+					[CompleteDate],
+					[Progress],
+					[ProjectID],
+					[Enabled],
+					[MileStoleOrder]
+				FROM
+					[dbo].[tblMileStole]
+				WHERE
+					[MileStoleID] = @MileStoleId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblMileStole_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblMileStole table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@MileStoleId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@MileStoleName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault="null"/>
+				<parameter name="@OriginalDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@RevisedDueDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@CompleteDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@Progress" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Enabled" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@MileStoleOrder" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [MileStoleID]
+	, [MileStoleName]
+	, [OriginalDueDate]
+	, [RevisedDueDate]
+	, [CompleteDate]
+	, [Progress]
+	, [ProjectID]
+	, [Enabled]
+	, [MileStoleOrder]
+    FROM
+	[dbo].[tblMileStole]
+    WHERE 
+	 ([MileStoleID] = @MileStoleId OR @MileStoleId IS NULL)
+	AND ([MileStoleName] = @MileStoleName OR @MileStoleName IS NULL)
+	AND ([OriginalDueDate] = @OriginalDueDate OR @OriginalDueDate IS NULL)
+	AND ([RevisedDueDate] = @RevisedDueDate OR @RevisedDueDate IS NULL)
+	AND ([CompleteDate] = @CompleteDate OR @CompleteDate IS NULL)
+	AND ([Progress] = @Progress OR @Progress IS NULL)
+	AND ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+	AND ([Enabled] = @Enabled OR @Enabled IS NULL)
+	AND ([MileStoleOrder] = @MileStoleOrder OR @MileStoleOrder IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [MileStoleID]
+	, [MileStoleName]
+	, [OriginalDueDate]
+	, [RevisedDueDate]
+	, [CompleteDate]
+	, [Progress]
+	, [ProjectID]
+	, [Enabled]
+	, [MileStoleOrder]
+    FROM
+	[dbo].[tblMileStole]
+    WHERE 
+	 ([MileStoleID] = @MileStoleId AND @MileStoleId is not null)
+	OR ([MileStoleName] = @MileStoleName AND @MileStoleName is not null)
+	OR ([OriginalDueDate] = @OriginalDueDate AND @OriginalDueDate is not null)
+	OR ([RevisedDueDate] = @RevisedDueDate AND @RevisedDueDate is not null)
+	OR ([CompleteDate] = @CompleteDate AND @CompleteDate is not null)
+	OR ([Progress] = @Progress AND @Progress is not null)
+	OR ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	OR ([Enabled] = @Enabled AND @Enabled is not null)
+	OR ([MileStoleOrder] = @MileStoleOrder AND @MileStoleOrder is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblMileStole_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblMileStole table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [MileStoleID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [MileStoleID] )
+				SELECT TOP {3} [MileStoleID]
+				FROM [dbo].[tblMileStole] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[MileStoleID], O.[MileStoleName], O.[OriginalDueDate], O.[RevisedDueDate], O.[CompleteDate], O.[Progress], O.[ProjectID], O.[Enabled], O.[MileStoleOrder]
+				FROM
+				    [dbo].[tblMileStole] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[MileStoleID] = PageIndex.[MileStoleID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblMileStole] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEType_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIEType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIETypeID],
+					[Initial],
+					[DIETypeName],
+					[Description],
+					[IsDefault],
+					[Selected],
+					[Active],
+					[Order],
+					[ProjectID]
+				FROM
+					[dbo].[tblDIEType]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEType_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEType table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIETypeID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIETypeID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIETypeID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEType]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIETypeID], O.[Initial], O.[DIETypeName], O.[Description], O.[IsDefault], O.[Selected], O.[Active], O.[Order], O.[ProjectID]
+				FROM
+				    [dbo].[tblDIEType] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIETypeID] = PageIndex.[DIETypeID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEType]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIEType_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIEType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieTypeId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Initial" type="char" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault=""/>
+				<parameter name="@DieTypeName" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault=""/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIEType]
+					(
+					[Initial]
+					,[DIETypeName]
+					,[Description]
+					,[IsDefault]
+					,[Selected]
+					,[Active]
+					,[Order]
+					,[ProjectID]
+					)
+				VALUES
+					(
+					@Initial
+					,@DieTypeName
+					,@Description
+					,@IsDefault
+					,@Selected
+					,@Active
+					,@Order
+					,@ProjectId
+					)
+				
+				-- Get the identity value
+				SET @DieTypeId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEType_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIEType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Initial" type="char" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault=""/>
+				<parameter name="@DieTypeName" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault=""/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIEType]
+				SET
+					[Initial] = @Initial
+					,[DIETypeName] = @DieTypeName
+					,[Description] = @Description
+					,[IsDefault] = @IsDefault
+					,[Selected] = @Selected
+					,[Active] = @Active
+					,[Order] = @Order
+					,[ProjectID] = @ProjectId
+				WHERE
+[DIETypeID] = @DieTypeId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEType_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIEType table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIEType] WITH (ROWLOCK) 
+				WHERE
+					[DIETypeID] = @DieTypeId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEType_GetByDieTypeId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIEType table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIETypeID],
+					[Initial],
+					[DIETypeName],
+					[Description],
+					[IsDefault],
+					[Selected],
+					[Active],
+					[Order],
+					[ProjectID]
+				FROM
+					[dbo].[tblDIEType]
+				WHERE
+					[DIETypeID] = @DieTypeId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIEType_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIEType table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Initial" type="char" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault="null"/>
+				<parameter name="@DieTypeName" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault="null"/>
+				<parameter name="@Description" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault="null"/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Active" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIETypeID]
+	, [Initial]
+	, [DIETypeName]
+	, [Description]
+	, [IsDefault]
+	, [Selected]
+	, [Active]
+	, [Order]
+	, [ProjectID]
+    FROM
+	[dbo].[tblDIEType]
+    WHERE 
+	 ([DIETypeID] = @DieTypeId OR @DieTypeId IS NULL)
+	AND ([Initial] = @Initial OR @Initial IS NULL)
+	AND ([DIETypeName] = @DieTypeName OR @DieTypeName IS NULL)
+	AND ([Description] = @Description OR @Description IS NULL)
+	AND ([IsDefault] = @IsDefault OR @IsDefault IS NULL)
+	AND ([Selected] = @Selected OR @Selected IS NULL)
+	AND ([Active] = @Active OR @Active IS NULL)
+	AND ([Order] = @Order OR @Order IS NULL)
+	AND ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIETypeID]
+	, [Initial]
+	, [DIETypeName]
+	, [Description]
+	, [IsDefault]
+	, [Selected]
+	, [Active]
+	, [Order]
+	, [ProjectID]
+    FROM
+	[dbo].[tblDIEType]
+    WHERE 
+	 ([DIETypeID] = @DieTypeId AND @DieTypeId is not null)
+	OR ([Initial] = @Initial AND @Initial is not null)
+	OR ([DIETypeName] = @DieTypeName AND @DieTypeName is not null)
+	OR ([Description] = @Description AND @Description is not null)
+	OR ([IsDefault] = @IsDefault AND @IsDefault is not null)
+	OR ([Selected] = @Selected AND @Selected is not null)
+	OR ([Active] = @Active AND @Active is not null)
+	OR ([Order] = @Order AND @Order is not null)
+	OR ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIEType_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEType table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIETypeID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIETypeID] )
+				SELECT TOP {3} [DIETypeID]
+				FROM [dbo].[tblDIEType] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIETypeID], O.[Initial], O.[DIETypeName], O.[Description], O.[IsDefault], O.[Selected], O.[Active], O.[Order], O.[ProjectID]
+				FROM
+				    [dbo].[tblDIEType] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIETypeID] = PageIndex.[DIETypeID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIEType] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEStatus_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIEStatus table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIEStatus],
+					[DIENameStatus],
+					[Order],
+					[Visible],
+					[Selected],
+					[IsDefault],
+					[IconLink],
+					[IsCompleted],
+					[Color],
+					[ColorName],
+					[ProjectID]
+				FROM
+					[dbo].[tblDIEStatus]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEStatus_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEStatus table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEStatus] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIEStatus])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIEStatus]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEStatus]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIEStatus], O.[DIENameStatus], O.[Order], O.[Visible], O.[Selected], O.[IsDefault], O.[IconLink], O.[IsCompleted], O.[Color], O.[ColorName], O.[ProjectID]
+				FROM
+				    [dbo].[tblDIEStatus] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIEStatus] = PageIndex.[DIEStatus]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEStatus]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIEStatus_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIEStatus table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieStatus" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieNameStatus" type="nvarchar" direction="Input" size="500" precision="0" scale="0" param="(500)" nulldefault=""/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Visible" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IconLink" type="varchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@IsCompleted" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Color" type="varchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@ColorName" type="nchar" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIEStatus]
+					(
+					[DIENameStatus]
+					,[Order]
+					,[Visible]
+					,[Selected]
+					,[IsDefault]
+					,[IconLink]
+					,[IsCompleted]
+					,[Color]
+					,[ColorName]
+					,[ProjectID]
+					)
+				VALUES
+					(
+					@DieNameStatus
+					,@Order
+					,@Visible
+					,@Selected
+					,@IsDefault
+					,@IconLink
+					,@IsCompleted
+					,@Color
+					,@ColorName
+					,@ProjectId
+					)
+				
+				-- Get the identity value
+				SET @DieStatus = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEStatus_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIEStatus table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieNameStatus" type="nvarchar" direction="Input" size="500" precision="0" scale="0" param="(500)" nulldefault=""/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Visible" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IconLink" type="varchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@IsCompleted" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@Color" type="varchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@ColorName" type="nchar" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIEStatus]
+				SET
+					[DIENameStatus] = @DieNameStatus
+					,[Order] = @Order
+					,[Visible] = @Visible
+					,[Selected] = @Selected
+					,[IsDefault] = @IsDefault
+					,[IconLink] = @IconLink
+					,[IsCompleted] = @IsCompleted
+					,[Color] = @Color
+					,[ColorName] = @ColorName
+					,[ProjectID] = @ProjectId
+				WHERE
+[DIEStatus] = @DieStatus 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEStatus_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIEStatus table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIEStatus] WITH (ROWLOCK) 
+				WHERE
+					[DIEStatus] = @DieStatus
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEStatus_GetByDieStatus" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIEStatus table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIEStatus],
+					[DIENameStatus],
+					[Order],
+					[Visible],
+					[Selected],
+					[IsDefault],
+					[IconLink],
+					[IsCompleted],
+					[Color],
+					[ColorName],
+					[ProjectID]
+				FROM
+					[dbo].[tblDIEStatus]
+				WHERE
+					[DIEStatus] = @DieStatus
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIEStatus_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIEStatus table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieNameStatus" type="nvarchar" direction="Input" size="500" precision="0" scale="0" param="(500)" nulldefault="null"/>
+				<parameter name="@Order" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Visible" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Selected" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@IsDefault" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@IconLink" type="varchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault="null"/>
+				<parameter name="@IsCompleted" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Color" type="varchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault="null"/>
+				<parameter name="@ColorName" type="nchar" direction="Input" size="10" precision="0" scale="0" param="(10)" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIEStatus]
+	, [DIENameStatus]
+	, [Order]
+	, [Visible]
+	, [Selected]
+	, [IsDefault]
+	, [IconLink]
+	, [IsCompleted]
+	, [Color]
+	, [ColorName]
+	, [ProjectID]
+    FROM
+	[dbo].[tblDIEStatus]
+    WHERE 
+	 ([DIEStatus] = @DieStatus OR @DieStatus IS NULL)
+	AND ([DIENameStatus] = @DieNameStatus OR @DieNameStatus IS NULL)
+	AND ([Order] = @Order OR @Order IS NULL)
+	AND ([Visible] = @Visible OR @Visible IS NULL)
+	AND ([Selected] = @Selected OR @Selected IS NULL)
+	AND ([IsDefault] = @IsDefault OR @IsDefault IS NULL)
+	AND ([IconLink] = @IconLink OR @IconLink IS NULL)
+	AND ([IsCompleted] = @IsCompleted OR @IsCompleted IS NULL)
+	AND ([Color] = @Color OR @Color IS NULL)
+	AND ([ColorName] = @ColorName OR @ColorName IS NULL)
+	AND ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIEStatus]
+	, [DIENameStatus]
+	, [Order]
+	, [Visible]
+	, [Selected]
+	, [IsDefault]
+	, [IconLink]
+	, [IsCompleted]
+	, [Color]
+	, [ColorName]
+	, [ProjectID]
+    FROM
+	[dbo].[tblDIEStatus]
+    WHERE 
+	 ([DIEStatus] = @DieStatus AND @DieStatus is not null)
+	OR ([DIENameStatus] = @DieNameStatus AND @DieNameStatus is not null)
+	OR ([Order] = @Order AND @Order is not null)
+	OR ([Visible] = @Visible AND @Visible is not null)
+	OR ([Selected] = @Selected AND @Selected is not null)
+	OR ([IsDefault] = @IsDefault AND @IsDefault is not null)
+	OR ([IconLink] = @IconLink AND @IconLink is not null)
+	OR ([IsCompleted] = @IsCompleted AND @IsCompleted is not null)
+	OR ([Color] = @Color AND @Color is not null)
+	OR ([ColorName] = @ColorName AND @ColorName is not null)
+	OR ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIEStatus_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEStatus table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEStatus] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIEStatus] )
+				SELECT TOP {3} [DIEStatus]
+				FROM [dbo].[tblDIEStatus] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIEStatus], O.[DIENameStatus], O.[Order], O.[Visible], O.[Selected], O.[IsDefault], O.[IconLink], O.[IsCompleted], O.[Color], O.[ColorName], O.[ProjectID]
+				FROM
+				    [dbo].[tblDIEStatus] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIEStatus] = PageIndex.[DIEStatus]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIEStatus] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIECategory_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIECategory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIECategoryID],
+					[DIECategoryName],
+					[DEICategoryDescription]
+				FROM
+					[dbo].[tblDIECategory]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIECategory_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIECategory table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIECategoryID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIECategoryID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIECategoryID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIECategory]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIECategoryID], O.[DIECategoryName], O.[DEICategoryDescription]
+				FROM
+				    [dbo].[tblDIECategory] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIECategoryID] = PageIndex.[DIECategoryID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIECategory]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIECategory_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIECategory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieCategoryId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieCategoryName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@DeiCategoryDescription" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIECategory]
+					(
+					[DIECategoryName]
+					,[DEICategoryDescription]
+					)
+				VALUES
+					(
+					@DieCategoryName
+					,@DeiCategoryDescription
+					)
+				
+				-- Get the identity value
+				SET @DieCategoryId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIECategory_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIECategory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieCategoryName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@DeiCategoryDescription" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIECategory]
+				SET
+					[DIECategoryName] = @DieCategoryName
+					,[DEICategoryDescription] = @DeiCategoryDescription
+				WHERE
+[DIECategoryID] = @DieCategoryId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIECategory_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIECategory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIECategory] WITH (ROWLOCK) 
+				WHERE
+					[DIECategoryID] = @DieCategoryId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIECategory_GetByDieCategoryId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIECategory table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIECategoryID],
+					[DIECategoryName],
+					[DEICategoryDescription]
+				FROM
+					[dbo].[tblDIECategory]
+				WHERE
+					[DIECategoryID] = @DieCategoryId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIECategory_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIECategory table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieCategoryName" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault="null"/>
+				<parameter name="@DeiCategoryDescription" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIECategoryID]
+	, [DIECategoryName]
+	, [DEICategoryDescription]
+    FROM
+	[dbo].[tblDIECategory]
+    WHERE 
+	 ([DIECategoryID] = @DieCategoryId OR @DieCategoryId IS NULL)
+	AND ([DIECategoryName] = @DieCategoryName OR @DieCategoryName IS NULL)
+	AND ([DEICategoryDescription] = @DeiCategoryDescription OR @DeiCategoryDescription IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIECategoryID]
+	, [DIECategoryName]
+	, [DEICategoryDescription]
+    FROM
+	[dbo].[tblDIECategory]
+    WHERE 
+	 ([DIECategoryID] = @DieCategoryId AND @DieCategoryId is not null)
+	OR ([DIECategoryName] = @DieCategoryName AND @DieCategoryName is not null)
+	OR ([DEICategoryDescription] = @DeiCategoryDescription AND @DeiCategoryDescription is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIECategory_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIECategory table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIECategoryID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIECategoryID] )
+				SELECT TOP {3} [DIECategoryID]
+				FROM [dbo].[tblDIECategory] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIECategoryID], O.[DIECategoryName], O.[DEICategoryDescription]
+				FROM
+				    [dbo].[tblDIECategory] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIECategoryID] = PageIndex.[DIECategoryID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIECategory] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEAttachFile_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIEAttachFile table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIEAttachFileID],
+					[DIERequestID],
+					[DIEFileName],
+					[DIEFileUrl]
+				FROM
+					[dbo].[tblDIEAttachFile]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEAttachFile_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEAttachFile table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEAttachFileID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIEAttachFileID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIEAttachFileID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEAttachFile]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIEAttachFileID], O.[DIERequestID], O.[DIEFileName], O.[DIEFileUrl]
+				FROM
+				    [dbo].[tblDIEAttachFile] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIEAttachFileID] = PageIndex.[DIEAttachFileID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEAttachFile]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIEAttachFile_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIEAttachFile table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieAttachFileId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieFileName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@DieFileUrl" type="nvarchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIEAttachFile]
+					(
+					[DIERequestID]
+					,[DIEFileName]
+					,[DIEFileUrl]
+					)
+				VALUES
+					(
+					@DieRequestId
+					,@DieFileName
+					,@DieFileUrl
+					)
+				
+				-- Get the identity value
+				SET @DieAttachFileId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEAttachFile_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIEAttachFile table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieAttachFileId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieFileName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@DieFileUrl" type="nvarchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIEAttachFile]
+				SET
+					[DIERequestID] = @DieRequestId
+					,[DIEFileName] = @DieFileName
+					,[DIEFileUrl] = @DieFileUrl
+				WHERE
+[DIEAttachFileID] = @DieAttachFileId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEAttachFile_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIEAttachFile table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieAttachFileId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIEAttachFile] WITH (ROWLOCK) 
+				WHERE
+					[DIEAttachFileID] = @DieAttachFileId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEAttachFile_GetByDieRequestId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIEAttachFile table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIEAttachFileID],
+					[DIERequestID],
+					[DIEFileName],
+					[DIEFileUrl]
+				FROM
+					[dbo].[tblDIEAttachFile]
+				WHERE
+					[DIERequestID] = @DieRequestId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEAttachFile_GetByDieAttachFileId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIEAttachFile table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieAttachFileId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIEAttachFileID],
+					[DIERequestID],
+					[DIEFileName],
+					[DIEFileUrl]
+				FROM
+					[dbo].[tblDIEAttachFile]
+				WHERE
+					[DIEAttachFileID] = @DieAttachFileId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIEAttachFile_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIEAttachFile table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieAttachFileId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieFileName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault="null"/>
+				<parameter name="@DieFileUrl" type="nvarchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIEAttachFileID]
+	, [DIERequestID]
+	, [DIEFileName]
+	, [DIEFileUrl]
+    FROM
+	[dbo].[tblDIEAttachFile]
+    WHERE 
+	 ([DIEAttachFileID] = @DieAttachFileId OR @DieAttachFileId IS NULL)
+	AND ([DIERequestID] = @DieRequestId OR @DieRequestId IS NULL)
+	AND ([DIEFileName] = @DieFileName OR @DieFileName IS NULL)
+	AND ([DIEFileUrl] = @DieFileUrl OR @DieFileUrl IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIEAttachFileID]
+	, [DIERequestID]
+	, [DIEFileName]
+	, [DIEFileUrl]
+    FROM
+	[dbo].[tblDIEAttachFile]
+    WHERE 
+	 ([DIEAttachFileID] = @DieAttachFileId AND @DieAttachFileId is not null)
+	OR ([DIERequestID] = @DieRequestId AND @DieRequestId is not null)
+	OR ([DIEFileName] = @DieFileName AND @DieFileName is not null)
+	OR ([DIEFileUrl] = @DieFileUrl AND @DieFileUrl is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIEAttachFile_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEAttachFile table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEAttachFileID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIEAttachFileID] )
+				SELECT TOP {3} [DIEAttachFileID]
+				FROM [dbo].[tblDIEAttachFile] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIEAttachFileID], O.[DIERequestID], O.[DIEFileName], O.[DIEFileUrl]
+				FROM
+				    [dbo].[tblDIEAttachFile] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIEAttachFileID] = PageIndex.[DIEAttachFileID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIEAttachFile] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEHistory_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIEHistory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIEHistoryID],
+					[DIERequestID],
+					[DIEDateSubmit],
+					[DIEStatus],
+					[DIEHistoryNote],
+					[DIEHistoryNoteJP],
+					[ReleaseID],
+					[UserID],
+					[Owner],
+					[LastUserUpdate],
+					[LastTimeUpdate],
+					[ActionTypeID]
+				FROM
+					[dbo].[tblDIEHistory]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIEHistory_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEHistory table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEHistoryID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIEHistoryID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIEHistoryID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEHistory]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIEHistoryID], O.[DIERequestID], O.[DIEDateSubmit], O.[DIEStatus], O.[DIEHistoryNote], O.[DIEHistoryNoteJP], O.[ReleaseID], O.[UserID], O.[Owner], O.[LastUserUpdate], O.[LastTimeUpdate], O.[ActionTypeID]
+				FROM
+				    [dbo].[tblDIEHistory] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIEHistoryID] = PageIndex.[DIEHistoryID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIEHistory]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIEHistory_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIEHistory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieHistoryId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@DieStatus" type="smallint" direction="Input" size="2" precision="5" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieHistoryNote" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@DieHistoryNoteJp" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastTimeUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIEHistory]
+					(
+					[DIERequestID]
+					,[DIEDateSubmit]
+					,[DIEStatus]
+					,[DIEHistoryNote]
+					,[DIEHistoryNoteJP]
+					,[ReleaseID]
+					,[UserID]
+					,[Owner]
+					,[LastUserUpdate]
+					,[LastTimeUpdate]
+					,[ActionTypeID]
+					)
+				VALUES
+					(
+					@DieRequestId
+					,@DieDateSubmit
+					,@DieStatus
+					,@DieHistoryNote
+					,@DieHistoryNoteJp
+					,@ReleaseId
+					,@UserId
+					,@Owner
+					,@LastUserUpdate
+					,@LastTimeUpdate
+					,@ActionTypeId
+					)
+				
+				-- Get the identity value
+				SET @DieHistoryId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEHistory_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIEHistory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieHistoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@DieStatus" type="smallint" direction="Input" size="2" precision="5" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieHistoryNote" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@DieHistoryNoteJp" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault=""/>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@LastTimeUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIEHistory]
+				SET
+					[DIERequestID] = @DieRequestId
+					,[DIEDateSubmit] = @DieDateSubmit
+					,[DIEStatus] = @DieStatus
+					,[DIEHistoryNote] = @DieHistoryNote
+					,[DIEHistoryNoteJP] = @DieHistoryNoteJp
+					,[ReleaseID] = @ReleaseId
+					,[UserID] = @UserId
+					,[Owner] = @Owner
+					,[LastUserUpdate] = @LastUserUpdate
+					,[LastTimeUpdate] = @LastTimeUpdate
+					,[ActionTypeID] = @ActionTypeId
+				WHERE
+[DIEHistoryID] = @DieHistoryId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEHistory_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIEHistory table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieHistoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIEHistory] WITH (ROWLOCK) 
+				WHERE
+					[DIEHistoryID] = @DieHistoryId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIEHistory_GetByDieHistoryId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIEHistory table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieHistoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIEHistoryID],
+					[DIERequestID],
+					[DIEDateSubmit],
+					[DIEStatus],
+					[DIEHistoryNote],
+					[DIEHistoryNoteJP],
+					[ReleaseID],
+					[UserID],
+					[Owner],
+					[LastUserUpdate],
+					[LastTimeUpdate],
+					[ActionTypeID]
+				FROM
+					[dbo].[tblDIEHistory]
+				WHERE
+					[DIEHistoryID] = @DieHistoryId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIEHistory_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIEHistory table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieHistoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@DieStatus" type="smallint" direction="Input" size="2" precision="5" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieHistoryNote" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault="null"/>
+				<parameter name="@DieHistoryNoteJp" type="nvarchar" direction="Input" size="4000" precision="0" scale="0" param="(4000)" nulldefault="null"/>
+				<parameter name="@ReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@LastTimeUpdate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@ActionTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIEHistoryID]
+	, [DIERequestID]
+	, [DIEDateSubmit]
+	, [DIEStatus]
+	, [DIEHistoryNote]
+	, [DIEHistoryNoteJP]
+	, [ReleaseID]
+	, [UserID]
+	, [Owner]
+	, [LastUserUpdate]
+	, [LastTimeUpdate]
+	, [ActionTypeID]
+    FROM
+	[dbo].[tblDIEHistory]
+    WHERE 
+	 ([DIEHistoryID] = @DieHistoryId OR @DieHistoryId IS NULL)
+	AND ([DIERequestID] = @DieRequestId OR @DieRequestId IS NULL)
+	AND ([DIEDateSubmit] = @DieDateSubmit OR @DieDateSubmit IS NULL)
+	AND ([DIEStatus] = @DieStatus OR @DieStatus IS NULL)
+	AND ([DIEHistoryNote] = @DieHistoryNote OR @DieHistoryNote IS NULL)
+	AND ([DIEHistoryNoteJP] = @DieHistoryNoteJp OR @DieHistoryNoteJp IS NULL)
+	AND ([ReleaseID] = @ReleaseId OR @ReleaseId IS NULL)
+	AND ([UserID] = @UserId OR @UserId IS NULL)
+	AND ([Owner] = @Owner OR @Owner IS NULL)
+	AND ([LastUserUpdate] = @LastUserUpdate OR @LastUserUpdate IS NULL)
+	AND ([LastTimeUpdate] = @LastTimeUpdate OR @LastTimeUpdate IS NULL)
+	AND ([ActionTypeID] = @ActionTypeId OR @ActionTypeId IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIEHistoryID]
+	, [DIERequestID]
+	, [DIEDateSubmit]
+	, [DIEStatus]
+	, [DIEHistoryNote]
+	, [DIEHistoryNoteJP]
+	, [ReleaseID]
+	, [UserID]
+	, [Owner]
+	, [LastUserUpdate]
+	, [LastTimeUpdate]
+	, [ActionTypeID]
+    FROM
+	[dbo].[tblDIEHistory]
+    WHERE 
+	 ([DIEHistoryID] = @DieHistoryId AND @DieHistoryId is not null)
+	OR ([DIERequestID] = @DieRequestId AND @DieRequestId is not null)
+	OR ([DIEDateSubmit] = @DieDateSubmit AND @DieDateSubmit is not null)
+	OR ([DIEStatus] = @DieStatus AND @DieStatus is not null)
+	OR ([DIEHistoryNote] = @DieHistoryNote AND @DieHistoryNote is not null)
+	OR ([DIEHistoryNoteJP] = @DieHistoryNoteJp AND @DieHistoryNoteJp is not null)
+	OR ([ReleaseID] = @ReleaseId AND @ReleaseId is not null)
+	OR ([UserID] = @UserId AND @UserId is not null)
+	OR ([Owner] = @Owner AND @Owner is not null)
+	OR ([LastUserUpdate] = @LastUserUpdate AND @LastUserUpdate is not null)
+	OR ([LastTimeUpdate] = @LastTimeUpdate AND @LastTimeUpdate is not null)
+	OR ([ActionTypeID] = @ActionTypeId AND @ActionTypeId is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIEHistory_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIEHistory table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIEHistoryID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIEHistoryID] )
+				SELECT TOP {3} [DIEHistoryID]
+				FROM [dbo].[tblDIEHistory] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIEHistoryID], O.[DIERequestID], O.[DIEDateSubmit], O.[DIEStatus], O.[DIEHistoryNote], O.[DIEHistoryNoteJP], O.[ReleaseID], O.[UserID], O.[Owner], O.[LastUserUpdate], O.[LastTimeUpdate], O.[ActionTypeID]
+				FROM
+				    [dbo].[tblDIEHistory] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIEHistoryID] = PageIndex.[DIEHistoryID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIEHistory] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblUser_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblUser table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[UserID],
+					[UserName],
+					[PassWord],
+					[QlnsID],
+					[Email],
+					[EmployeeName],
+					[Remove],
+					[IsLoginSystem],
+					[UpdateDate],
+					[UserUpdate],
+					[PageDefaultLogin],
+					[DateCreated],
+					[DateRemoved],
+					[IsNoBody]
+				FROM
+					[dbo].[tblUser]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblUser_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblUser table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [UserID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([UserID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [UserID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblUser]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[UserID], O.[UserName], O.[PassWord], O.[QlnsID], O.[Email], O.[EmployeeName], O.[Remove], O.[IsLoginSystem], O.[UpdateDate], O.[UserUpdate], O.[PageDefaultLogin], O.[DateCreated], O.[DateRemoved], O.[IsNoBody]
+				FROM
+				    [dbo].[tblUser] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[UserID] = PageIndex.[UserID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblUser]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblUser_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblUser table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserName" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@PassWord" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@QlnsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Email" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@EmployeeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@Remove" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IsLoginSystem" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@UpdateDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@UserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PageDefaultLogin" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@DateCreated" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@DateRemoved" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@IsNoBody" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblUser]
+					(
+					[UserName]
+					,[PassWord]
+					,[QlnsID]
+					,[Email]
+					,[EmployeeName]
+					,[Remove]
+					,[IsLoginSystem]
+					,[UpdateDate]
+					,[UserUpdate]
+					,[PageDefaultLogin]
+					,[DateCreated]
+					,[DateRemoved]
+					,[IsNoBody]
+					)
+				VALUES
+					(
+					@UserName
+					,@PassWord
+					,@QlnsId
+					,@Email
+					,@EmployeeName
+					,@Remove
+					,@IsLoginSystem
+					,@UpdateDate
+					,@UserUpdate
+					,@PageDefaultLogin
+					,@DateCreated
+					,@DateRemoved
+					,@IsNoBody
+					)
+				
+				-- Get the identity value
+				SET @UserId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblUser_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblUser table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserName" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@PassWord" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+				<parameter name="@QlnsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Email" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@EmployeeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault=""/>
+				<parameter name="@Remove" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@IsLoginSystem" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+				<parameter name="@UpdateDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@UserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PageDefaultLogin" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault=""/>
+				<parameter name="@DateCreated" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@DateRemoved" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@IsNoBody" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblUser]
+				SET
+					[UserName] = @UserName
+					,[PassWord] = @PassWord
+					,[QlnsID] = @QlnsId
+					,[Email] = @Email
+					,[EmployeeName] = @EmployeeName
+					,[Remove] = @Remove
+					,[IsLoginSystem] = @IsLoginSystem
+					,[UpdateDate] = @UpdateDate
+					,[UserUpdate] = @UserUpdate
+					,[PageDefaultLogin] = @PageDefaultLogin
+					,[DateCreated] = @DateCreated
+					,[DateRemoved] = @DateRemoved
+					,[IsNoBody] = @IsNoBody
+				WHERE
+[UserID] = @UserId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblUser_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblUser table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblUser] WITH (ROWLOCK) 
+				WHERE
+					[UserID] = @UserId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblUser_GetByUserId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblUser table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[UserID],
+					[UserName],
+					[PassWord],
+					[QlnsID],
+					[Email],
+					[EmployeeName],
+					[Remove],
+					[IsLoginSystem],
+					[UpdateDate],
+					[UserUpdate],
+					[PageDefaultLogin],
+					[DateCreated],
+					[DateRemoved],
+					[IsNoBody]
+				FROM
+					[dbo].[tblUser]
+				WHERE
+					[UserID] = @UserId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblUser_GetByUserName" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblUser table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserName" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[UserID],
+					[UserName],
+					[PassWord],
+					[QlnsID],
+					[Email],
+					[EmployeeName],
+					[Remove],
+					[IsLoginSystem],
+					[UpdateDate],
+					[UserUpdate],
+					[PageDefaultLogin],
+					[DateCreated],
+					[DateRemoved],
+					[IsNoBody]
+				FROM
+					[dbo].[tblUser]
+				WHERE
+					[UserName] = @UserName
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblUser_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblUser table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UserName" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault="null"/>
+				<parameter name="@PassWord" type="nvarchar" direction="Input" size="50" precision="0" scale="0" param="(50)" nulldefault="null"/>
+				<parameter name="@QlnsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Email" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault="null"/>
+				<parameter name="@EmployeeName" type="nvarchar" direction="Input" size="100" precision="0" scale="0" param="(100)" nulldefault="null"/>
+				<parameter name="@Remove" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@IsLoginSystem" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UpdateDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@UserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@PageDefaultLogin" type="nvarchar" direction="Input" size="1000" precision="0" scale="0" param="(1000)" nulldefault="null"/>
+				<parameter name="@DateCreated" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@DateRemoved" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@IsNoBody" type="bit" direction="Input" size="1" precision="1" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [UserID]
+	, [UserName]
+	, [PassWord]
+	, [QlnsID]
+	, [Email]
+	, [EmployeeName]
+	, [Remove]
+	, [IsLoginSystem]
+	, [UpdateDate]
+	, [UserUpdate]
+	, [PageDefaultLogin]
+	, [DateCreated]
+	, [DateRemoved]
+	, [IsNoBody]
+    FROM
+	[dbo].[tblUser]
+    WHERE 
+	 ([UserID] = @UserId OR @UserId IS NULL)
+	AND ([UserName] = @UserName OR @UserName IS NULL)
+	AND ([PassWord] = @PassWord OR @PassWord IS NULL)
+	AND ([QlnsID] = @QlnsId OR @QlnsId IS NULL)
+	AND ([Email] = @Email OR @Email IS NULL)
+	AND ([EmployeeName] = @EmployeeName OR @EmployeeName IS NULL)
+	AND ([Remove] = @Remove OR @Remove IS NULL)
+	AND ([IsLoginSystem] = @IsLoginSystem OR @IsLoginSystem IS NULL)
+	AND ([UpdateDate] = @UpdateDate OR @UpdateDate IS NULL)
+	AND ([UserUpdate] = @UserUpdate OR @UserUpdate IS NULL)
+	AND ([PageDefaultLogin] = @PageDefaultLogin OR @PageDefaultLogin IS NULL)
+	AND ([DateCreated] = @DateCreated OR @DateCreated IS NULL)
+	AND ([DateRemoved] = @DateRemoved OR @DateRemoved IS NULL)
+	AND ([IsNoBody] = @IsNoBody OR @IsNoBody IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [UserID]
+	, [UserName]
+	, [PassWord]
+	, [QlnsID]
+	, [Email]
+	, [EmployeeName]
+	, [Remove]
+	, [IsLoginSystem]
+	, [UpdateDate]
+	, [UserUpdate]
+	, [PageDefaultLogin]
+	, [DateCreated]
+	, [DateRemoved]
+	, [IsNoBody]
+    FROM
+	[dbo].[tblUser]
+    WHERE 
+	 ([UserID] = @UserId AND @UserId is not null)
+	OR ([UserName] = @UserName AND @UserName is not null)
+	OR ([PassWord] = @PassWord AND @PassWord is not null)
+	OR ([QlnsID] = @QlnsId AND @QlnsId is not null)
+	OR ([Email] = @Email AND @Email is not null)
+	OR ([EmployeeName] = @EmployeeName AND @EmployeeName is not null)
+	OR ([Remove] = @Remove AND @Remove is not null)
+	OR ([IsLoginSystem] = @IsLoginSystem AND @IsLoginSystem is not null)
+	OR ([UpdateDate] = @UpdateDate AND @UpdateDate is not null)
+	OR ([UserUpdate] = @UserUpdate AND @UserUpdate is not null)
+	OR ([PageDefaultLogin] = @PageDefaultLogin AND @PageDefaultLogin is not null)
+	OR ([DateCreated] = @DateCreated AND @DateCreated is not null)
+	OR ([DateRemoved] = @DateRemoved AND @DateRemoved is not null)
+	OR ([IsNoBody] = @IsNoBody AND @IsNoBody is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblUser_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblUser table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [UserID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [UserID] )
+				SELECT TOP {3} [UserID]
+				FROM [dbo].[tblUser] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[UserID], O.[UserName], O.[PassWord], O.[QlnsID], O.[Email], O.[EmployeeName], O.[Remove], O.[IsLoginSystem], O.[UpdateDate], O.[UserUpdate], O.[PageDefaultLogin], O.[DateCreated], O.[DateRemoved], O.[IsNoBody]
+				FROM
+				    [dbo].[tblUser] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[UserID] = PageIndex.[UserID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblUser] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIERequest_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the tblDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+					
+				SELECT @@ROWCOUNT
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="tblDIERequest_GetPaged" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIERequest table passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>
+				<parameter name="@PageIndex" type="int" direction="Input" size="0" precision="10" scale="0" />
+				<parameter name="@PageSize" type="int" direction="Input" size="0" precision="10" scale="0" /> 
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+				DECLARE @PageLowerBound int
+				DECLARE @PageUpperBound int
+				
+				-- Set the page bounds
+				SET @PageLowerBound = @PageSize * @PageIndex
+				SET @PageUpperBound = @PageLowerBound + @PageSize
+
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIERequestID] int 
+				)
+				
+				-- Insert into the temp table
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = 'INSERT INTO #PageIndex ([DIERequestID])'
+				SET @SQL = @SQL + ' SELECT'
+				IF @PageSize > 0
+				BEGIN
+					SET @SQL = @SQL + ' TOP ' + CONVERT(nvarchar, @PageUpperBound)
+				END
+				SET @SQL = @SQL + ' [DIERequestID]'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIERequest]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Populate the temp table
+				EXEC sp_executesql @SQL
+
+				-- Return paged results
+				SELECT O.[DIERequestID], O.[DIEName], O.[DIETag], O.[DIEDescription], O.[DIETypeID], O.[ResolutionsID], O.[UserID], O.[ProjectID], O.[DIEStatus], O.[PriorityDIERequestID], O.[DIEDateSubmit], O.[CodeBy], O.[Owner], O.[UpdateTime], O.[LastUserUpdate], O.[TargetDate], O.[CompletedReleaseID], O.[MilestoneID], O.[DIECategoryID], O.[Estimated], O.[Actual], O.[ParentDie]
+				FROM
+				    [dbo].[tblDIERequest] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > @PageLowerBound
+					AND O.[DIERequestID] = PageIndex.[DIERequestID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+				-- get row count
+				SET @SQL = 'SELECT COUNT(*) AS TotalRowCount'
+				SET @SQL = @SQL + ' FROM [dbo].[tblDIERequest]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				EXEC sp_executesql @SQL
+			
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="tblDIERequest_Insert" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Inserts a record into the tblDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieRequestId" type="int" direction="Output" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@DieTag" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault=""/>
+				<parameter name="@DieDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CodeBy" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UpdateTime" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@TargetDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CompletedReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@MilestoneId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Estimated" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@Actual" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@ParentDie" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				INSERT INTO [dbo].[tblDIERequest]
+					(
+					[DIEName]
+					,[DIETag]
+					,[DIEDescription]
+					,[DIETypeID]
+					,[ResolutionsID]
+					,[UserID]
+					,[ProjectID]
+					,[DIEStatus]
+					,[PriorityDIERequestID]
+					,[DIEDateSubmit]
+					,[CodeBy]
+					,[Owner]
+					,[UpdateTime]
+					,[LastUserUpdate]
+					,[TargetDate]
+					,[CompletedReleaseID]
+					,[MilestoneID]
+					,[DIECategoryID]
+					,[Estimated]
+					,[Actual]
+					,[ParentDie]
+					)
+				VALUES
+					(
+					@DieName
+					,@DieTag
+					,@DieDescription
+					,@DieTypeId
+					,@ResolutionsId
+					,@UserId
+					,@ProjectId
+					,@DieStatus
+					,@PriorityDieRequestId
+					,@DieDateSubmit
+					,@CodeBy
+					,@Owner
+					,@UpdateTime
+					,@LastUserUpdate
+					,@TargetDate
+					,@CompletedReleaseId
+					,@MilestoneId
+					,@DieCategoryId
+					,@Estimated
+					,@Actual
+					,@ParentDie
+					)
+				
+				-- Get the identity value
+				SET @DieRequestId = SCOPE_IDENTITY()
+									
+							
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_Update" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Updates a record in the tblDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault=""/>
+				<parameter name="@DieTag" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault=""/>
+				<parameter name="@DieDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CodeBy" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@UpdateTime" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@TargetDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault=""/>
+				<parameter name="@CompletedReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@MilestoneId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+				<parameter name="@Estimated" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@Actual" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault=""/>
+				<parameter name="@ParentDie" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				
+				
+				-- Modify the updatable columns
+				UPDATE
+					[dbo].[tblDIERequest]
+				SET
+					[DIEName] = @DieName
+					,[DIETag] = @DieTag
+					,[DIEDescription] = @DieDescription
+					,[DIETypeID] = @DieTypeId
+					,[ResolutionsID] = @ResolutionsId
+					,[UserID] = @UserId
+					,[ProjectID] = @ProjectId
+					,[DIEStatus] = @DieStatus
+					,[PriorityDIERequestID] = @PriorityDieRequestId
+					,[DIEDateSubmit] = @DieDateSubmit
+					,[CodeBy] = @CodeBy
+					,[Owner] = @Owner
+					,[UpdateTime] = @UpdateTime
+					,[LastUserUpdate] = @LastUserUpdate
+					,[TargetDate] = @TargetDate
+					,[CompletedReleaseID] = @CompletedReleaseId
+					,[MilestoneID] = @MilestoneId
+					,[DIECategoryID] = @DieCategoryId
+					,[Estimated] = @Estimated
+					,[Actual] = @Actual
+					,[ParentDie] = @ParentDie
+				WHERE
+[DIERequestID] = @DieRequestId 
+				
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_Delete" grant="">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Deletes a record in the tblDIERequest table
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				DELETE FROM [dbo].[tblDIERequest] WITH (ROWLOCK) 
+				WHERE
+					[DIERequestID] = @DieRequestId
+					
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByDieCategoryId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[DIECategoryID] = @DieCategoryId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByParentDie" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ParentDie" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[ParentDie] = @ParentDie
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByDieStatus" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[DIEStatus] = @DieStatus
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByDieTypeId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[DIETypeID] = @DieTypeId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByMilestoneId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@MilestoneId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[MilestoneID] = @MilestoneId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByPriorityDieRequestId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[PriorityDIERequestID] = @PriorityDieRequestId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByProjectId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[ProjectID] = @ProjectId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByCompletedReleaseId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@CompletedReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[CompletedReleaseID] = @CompletedReleaseId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByResolutionsId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[ResolutionsID] = @ResolutionsId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByUserId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[UserID] = @UserId
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByCodeBy" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@CodeBy" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[CodeBy] = @CodeBy
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByOwner" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[Owner] = @Owner
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByLastUserUpdate" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through a foreign key
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SET ANSI_NULLS OFF
+				
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[LastUserUpdate] = @LastUserUpdate
+				
+				SELECT @@ROWCOUNT
+				SET ANSI_NULLS ON
+			]]></body>
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_GetByDieRequestId" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Select records from the tblDIERequest table through an index
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault=""/>
+			</parameters>
+			<body><![CDATA[
+				SELECT
+					[DIERequestID],
+					[DIEName],
+					[DIETag],
+					[DIEDescription],
+					[DIETypeID],
+					[ResolutionsID],
+					[UserID],
+					[ProjectID],
+					[DIEStatus],
+					[PriorityDIERequestID],
+					[DIEDateSubmit],
+					[CodeBy],
+					[Owner],
+					[UpdateTime],
+					[LastUserUpdate],
+					[TargetDate],
+					[CompletedReleaseID],
+					[MilestoneID],
+					[DIECategoryID],
+					[Estimated],
+					[Actual],
+					[ParentDie]
+				FROM
+					[dbo].[tblDIERequest]
+				WHERE
+					[DIERequestID] = @DieRequestId
+				SELECT @@ROWCOUNT
+					
+			]]></body>
+			
+		</procedure>
+		<procedure owner="dbo" name="tblDIERequest_Find" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Finds records in the tblDIERequest table passing nullable parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@SearchUsingOR" type="bit" direction="Input" size="0" precision="1" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieName" type="nvarchar" direction="Input" size="400" precision="0" scale="0" param="(400)" nulldefault="null"/>
+				<parameter name="@DieTag" type="nvarchar" direction="Input" size="250" precision="0" scale="0" param="(250)" nulldefault="null"/>
+				<parameter name="@DieDescription" type="ntext" direction="Input" size="16" precision="0" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieTypeId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ResolutionsId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UserId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ProjectId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieStatus" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@PriorityDieRequestId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieDateSubmit" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@CodeBy" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Owner" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@UpdateTime" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@LastUserUpdate" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@TargetDate" type="datetime" direction="Input" size="8" precision="23" scale="3" param="" nulldefault="null"/>
+				<parameter name="@CompletedReleaseId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@MilestoneId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@DieCategoryId" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Estimated" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault="null"/>
+				<parameter name="@Actual" type="float" direction="Input" size="8" precision="53" scale="0" param="" nulldefault="null"/>
+				<parameter name="@ParentDie" type="int" direction="Input" size="4" precision="10" scale="0" param="" nulldefault="null"/>
+			</parameters>
+			<body><![CDATA[
+				
+  IF ISNULL(@SearchUsingOR, 0) <> 1
+  BEGIN
+    SELECT
+	  [DIERequestID]
+	, [DIEName]
+	, [DIETag]
+	, [DIEDescription]
+	, [DIETypeID]
+	, [ResolutionsID]
+	, [UserID]
+	, [ProjectID]
+	, [DIEStatus]
+	, [PriorityDIERequestID]
+	, [DIEDateSubmit]
+	, [CodeBy]
+	, [Owner]
+	, [UpdateTime]
+	, [LastUserUpdate]
+	, [TargetDate]
+	, [CompletedReleaseID]
+	, [MilestoneID]
+	, [DIECategoryID]
+	, [Estimated]
+	, [Actual]
+	, [ParentDie]
+    FROM
+	[dbo].[tblDIERequest]
+    WHERE 
+	 ([DIERequestID] = @DieRequestId OR @DieRequestId IS NULL)
+	AND ([DIEName] = @DieName OR @DieName IS NULL)
+	AND ([DIETag] = @DieTag OR @DieTag IS NULL)
+	AND ([DIETypeID] = @DieTypeId OR @DieTypeId IS NULL)
+	AND ([ResolutionsID] = @ResolutionsId OR @ResolutionsId IS NULL)
+	AND ([UserID] = @UserId OR @UserId IS NULL)
+	AND ([ProjectID] = @ProjectId OR @ProjectId IS NULL)
+	AND ([DIEStatus] = @DieStatus OR @DieStatus IS NULL)
+	AND ([PriorityDIERequestID] = @PriorityDieRequestId OR @PriorityDieRequestId IS NULL)
+	AND ([DIEDateSubmit] = @DieDateSubmit OR @DieDateSubmit IS NULL)
+	AND ([CodeBy] = @CodeBy OR @CodeBy IS NULL)
+	AND ([Owner] = @Owner OR @Owner IS NULL)
+	AND ([UpdateTime] = @UpdateTime OR @UpdateTime IS NULL)
+	AND ([LastUserUpdate] = @LastUserUpdate OR @LastUserUpdate IS NULL)
+	AND ([TargetDate] = @TargetDate OR @TargetDate IS NULL)
+	AND ([CompletedReleaseID] = @CompletedReleaseId OR @CompletedReleaseId IS NULL)
+	AND ([MilestoneID] = @MilestoneId OR @MilestoneId IS NULL)
+	AND ([DIECategoryID] = @DieCategoryId OR @DieCategoryId IS NULL)
+	AND ([Estimated] = @Estimated OR @Estimated IS NULL)
+	AND ([Actual] = @Actual OR @Actual IS NULL)
+	AND ([ParentDie] = @ParentDie OR @ParentDie IS NULL)
+						
+  END
+  ELSE
+  BEGIN
+    SELECT
+	  [DIERequestID]
+	, [DIEName]
+	, [DIETag]
+	, [DIEDescription]
+	, [DIETypeID]
+	, [ResolutionsID]
+	, [UserID]
+	, [ProjectID]
+	, [DIEStatus]
+	, [PriorityDIERequestID]
+	, [DIEDateSubmit]
+	, [CodeBy]
+	, [Owner]
+	, [UpdateTime]
+	, [LastUserUpdate]
+	, [TargetDate]
+	, [CompletedReleaseID]
+	, [MilestoneID]
+	, [DIECategoryID]
+	, [Estimated]
+	, [Actual]
+	, [ParentDie]
+    FROM
+	[dbo].[tblDIERequest]
+    WHERE 
+	 ([DIERequestID] = @DieRequestId AND @DieRequestId is not null)
+	OR ([DIEName] = @DieName AND @DieName is not null)
+	OR ([DIETag] = @DieTag AND @DieTag is not null)
+	OR ([DIETypeID] = @DieTypeId AND @DieTypeId is not null)
+	OR ([ResolutionsID] = @ResolutionsId AND @ResolutionsId is not null)
+	OR ([UserID] = @UserId AND @UserId is not null)
+	OR ([ProjectID] = @ProjectId AND @ProjectId is not null)
+	OR ([DIEStatus] = @DieStatus AND @DieStatus is not null)
+	OR ([PriorityDIERequestID] = @PriorityDieRequestId AND @PriorityDieRequestId is not null)
+	OR ([DIEDateSubmit] = @DieDateSubmit AND @DieDateSubmit is not null)
+	OR ([CodeBy] = @CodeBy AND @CodeBy is not null)
+	OR ([Owner] = @Owner AND @Owner is not null)
+	OR ([UpdateTime] = @UpdateTime AND @UpdateTime is not null)
+	OR ([LastUserUpdate] = @LastUserUpdate AND @LastUserUpdate is not null)
+	OR ([TargetDate] = @TargetDate AND @TargetDate is not null)
+	OR ([CompletedReleaseID] = @CompletedReleaseId AND @CompletedReleaseId is not null)
+	OR ([MilestoneID] = @MilestoneId AND @MilestoneId is not null)
+	OR ([DIECategoryID] = @DieCategoryId AND @DieCategoryId is not null)
+	OR ([Estimated] = @Estimated AND @Estimated is not null)
+	OR ([Actual] = @Actual AND @Actual is not null)
+	OR ([ParentDie] = @ParentDie AND @ParentDie is not null)
+	SELECT @@ROWCOUNT			
+  END
+				]]></body>
+		</procedure>
+
+		
+		<procedure owner="dbo" name="tblDIERequest_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the tblDIERequest table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				-- Create a temp table to store the select results
+				CREATE TABLE #PageIndex
+				(
+				    [IndexId] int IDENTITY (1, 1) NOT NULL,
+				    [DIERequestID] int 
+				)
+				
+				-- Insert into the temp table
+				INSERT INTO #PageIndex ( [DIERequestID] )
+				SELECT TOP {3} [DIERequestID]
+				FROM [dbo].[tblDIERequest] {0}
+				ORDER BY {1}
+				
+				-- Return paged results
+				SELECT O.[DIERequestID], O.[DIEName], O.[DIETag], O.[DIEDescription], O.[DIETypeID], O.[ResolutionsID], O.[UserID], O.[ProjectID], O.[DIEStatus], O.[PriorityDIERequestID], O.[DIEDateSubmit], O.[CodeBy], O.[Owner], O.[UpdateTime], O.[LastUserUpdate], O.[TargetDate], O.[CompletedReleaseID], O.[MilestoneID], O.[DIECategoryID], O.[Estimated], O.[Actual], O.[ParentDie]
+				FROM
+				    [dbo].[tblDIERequest] O,
+				    #PageIndex PageIndex
+				WHERE
+				    PageIndex.IndexId > {2}
+				    AND O.[DIERequestID] = PageIndex.[DIERequestID]
+				ORDER BY
+				    PageIndex.IndexId
+				
+
+				-- get total count
+				SELECT COUNT(*) AS TotalRowCount FROM [dbo].[tblDIERequest] {0};
+				
+				DROP TABLE #PageIndex
+				END
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="HomeDIERequest_Get_List" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets all records from the HomeDIERequest view
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				SELECT
+					[DIEName],
+					[DIERequestID],
+					[DIETag],
+					[DIEDescription],
+					[UpdateUserID],
+					[ProjectID],
+					[DIEDateSubmit],
+					[DIENameStatus],
+					[DIETypeName],
+					[PriorityDIERequestName],
+					[Color],
+					[ColorName],
+					[DIEStatus],
+					[UpdateTime],
+					[UpdatedUsername],
+					[TargetDate],
+					[Estimated],
+					[Actual],
+					[UserName],
+					[UpdatedUserID],
+					[DIESubmitDateOnly]
+				FROM
+					[dbo].[HomeDIERequest]
+					
+				SELECT @@ROWCOUNT			
+			]]></body>
+		</procedure>
+		
+		<procedure owner="dbo" name="HomeDIERequest_Get" >
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the HomeDIERequest view passing page index and page count parameters
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters>
+				<parameter name="@WhereClause" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)" />
+				<parameter name="@OrderBy" type="varchar" direction="Input" size="2000" precision="0" scale="0" param="(2000)"/>			
+			</parameters>
+			<body><![CDATA[
+				
+				BEGIN
+
+				-- Build the sql query
+				DECLARE @SQL AS nvarchar(4000)
+				SET @SQL = ' SELECT * FROM [dbo].[HomeDIERequest]'
+				IF LEN(@WhereClause) > 0
+				BEGIN
+					SET @SQL = @SQL + ' WHERE ' + @WhereClause
+				END
+				IF LEN(@OrderBy) > 0
+				BEGIN
+					SET @SQL = @SQL + ' ORDER BY ' + @OrderBy
+				END
+				
+				-- Execution the query
+				EXEC sp_executesql @SQL
+				
+				-- Return total count
+				SELECT @@ROWCOUNT AS TotalRowCount
+				
+				END
+			]]></body>
+		</procedure>
+		
+		
+		<procedure owner="dbo" name="HomeDIERequest_Find_Dynamic"  skip="true">
+			<comment><![CDATA[/*
+----------------------------------------------------------------------------------------------------
+
+-- Created By:  ()
+-- Purpose: Gets records from the HomeDIERequest table using a dynamically generated query.
+----------------------------------------------------------------------------------------------------
+*/
+]]></comment>
+			<parameters/>
+			<body><![CDATA[
+				
+				BEGIN
+				
+				SELECT * FROM [dbo].[HomeDIERequest] {0}
+				ORDER BY {1}
+
+				-- get total count
+				SELECT @@ROWCOUNT AS TotalRowCount;
+				
+				END
+			]]></body>
+		</procedure>
+		
+</procedures>
+</root>
