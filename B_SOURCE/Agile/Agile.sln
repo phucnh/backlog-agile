@@ -1,0 +1,106 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{34D91245-E448-48F2-A35F-C1665066FF6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{935D2D3E-784C-4005-B557-BEECF8431B4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GeneratedCode", "GeneratedCode", "{DD500F8F-C7A2-4AC2-940C-0F9018442287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Web", "Generated Code\Agile.Web\Agile.Web.csproj", "{47FE3BE8-3E46-47CA-8494-473755867DD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Services", "Generated Code\Agile.Services\Agile.Services.csproj", "{794327CE-DC0A-4381-89EE-4C00AFB08D5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Entities", "Generated Code\Agile.Entities\Agile.Entities.csproj", "{20E43088-4618-4F4A-B8AD-FC31B50D94CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Data.SqlClient", "Generated Code\Agile.Data.SqlClient\Agile.Data.SqlClient.csproj", "{8996A7B4-57D3-440B-A545-A701844B8C4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile.Data", "Generated Code\Agile.Data\Agile.Data.csproj", "{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agile", "Web\Agile\Agile.csproj", "{1A47BC80-D650-4BED-B004-A4B7ACE62180}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Agile.Website", "Generated Code\Agile.Website\", "{5E211AEF-D6F1-42D8-B627-B3C6635E089E}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		ProjectReferences = "{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}|Agile.Data.dll;{20E43088-4618-4F4A-B8AD-FC31B50D94CD}|Agile.Entities.dll;{794327CE-DC0A-4381-89EE-4C00AFB08D5A}|Agile.Services.dll;{8996A7B4-57D3-440B-A545-A701844B8C4A}|Agile.Data.SqlClient.dll;{47FE3BE8-3E46-47CA-8494-473755867DD0}|Agile.Web.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/Agile.Website"
+		Debug.AspNetCompiler.PhysicalPath = "Generated Code\Agile.Website\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Agile.Website\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/Agile.Website"
+		Release.AspNetCompiler.PhysicalPath = "Generated Code\Agile.Website\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Agile.Website\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "22975"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		GenerateDebug|Any CPU = GenerateDebug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.GenerateDebug|Any CPU.ActiveCfg = GenerateDebug|Any CPU
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.GenerateDebug|Any CPU.Build.0 = GenerateDebug|Any CPU
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FE3BE8-3E46-47CA-8494-473755867DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.GenerateDebug|Any CPU.ActiveCfg = GenerateDebug|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.GenerateDebug|Any CPU.Build.0 = GenerateDebug|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.GenerateDebug|Any CPU.ActiveCfg = GenerateDebug|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.GenerateDebug|Any CPU.Build.0 = GenerateDebug|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.GenerateDebug|Any CPU.ActiveCfg = GenerateDebug|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.GenerateDebug|Any CPU.Build.0 = GenerateDebug|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8996A7B4-57D3-440B-A545-A701844B8C4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.GenerateDebug|Any CPU.ActiveCfg = GenerateDebug|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.GenerateDebug|Any CPU.Build.0 = GenerateDebug|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.GenerateDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.GenerateDebug|Any CPU.Build.0 = Debug|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.GenerateDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.GenerateDebug|Any CPU.Build.0 = Debug|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD500F8F-C7A2-4AC2-940C-0F9018442287} = {34D91245-E448-48F2-A35F-C1665066FF6B}
+		{1A47BC80-D650-4BED-B004-A4B7ACE62180} = {935D2D3E-784C-4005-B557-BEECF8431B4A}
+		{47FE3BE8-3E46-47CA-8494-473755867DD0} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+		{794327CE-DC0A-4381-89EE-4C00AFB08D5A} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+		{20E43088-4618-4F4A-B8AD-FC31B50D94CD} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+		{8996A7B4-57D3-440B-A545-A701844B8C4A} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+		{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+		{5E211AEF-D6F1-42D8-B627-B3C6635E089E} = {DD500F8F-C7A2-4AC2-940C-0F9018442287}
+	EndGlobalSection
+EndGlobal

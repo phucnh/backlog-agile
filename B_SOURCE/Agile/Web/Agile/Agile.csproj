@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A47BC80-D650-4BED-B004-A4B7ACE62180}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Agile</RootNamespace>
+    <AssemblyName>Agile</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Library\System.Web.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="Telerik.Web.Design">
+      <HintPath>..\Library\Telerik.Web.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Web.UI">
+      <HintPath>..\Library\Telerik.Web.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Themes\Default\default.css" />
+    <Content Include="App_Themes\Default\fancybox\blank.gif" />
+    <Content Include="App_Themes\Default\fancybox\fancybox-x.png" />
+    <Content Include="App_Themes\Default\fancybox\fancybox-y.png" />
+    <Content Include="App_Themes\Default\fancybox\fancybox.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_close.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_loading.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_nav_left.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_nav_right.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_e.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_n.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_ne.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_nw.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_s.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_se.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_sw.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_shadow_w.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_title_left.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_title_main.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_title_over.png" />
+    <Content Include="App_Themes\Default\fancybox\fancy_title_right.png" />
+    <Content Include="App_Themes\Default\fancybox\jquery.easing-1.3.pack.js" />
+    <Content Include="App_Themes\Default\fancybox\jquery.fancybox-1.3.4.css" />
+    <Content Include="App_Themes\Default\fancybox\jquery.fancybox-1.3.4.js" />
+    <Content Include="App_Themes\Default\fancybox\jquery.fancybox-1.3.4.pack.js" />
+    <Content Include="App_Themes\Default\fancybox\jquery.mousewheel-3.0.4.pack.js" />
+    <Content Include="App_Themes\Default\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="App_Themes\Default\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="App_Themes\Default\images\ui-icons_222222_256x240.png" />
+    <Content Include="App_Themes\Default\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="App_Themes\Default\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="App_Themes\Default\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="App_Themes\Default\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="App_Themes\Default\jquery-ui-1.8.16.custom.css" />
+    <Content Include="CategoryManagement\Category.aspx" />
+    <Content Include="CategoryManagement\Controls\CategoryList.ascx" />
+    <Content Include="Default.aspx" />
+    <Content Include="IssueManagement\AddIssue.aspx" />
+    <Content Include="IssueManagement\Controls\DieList.ascx" />
+    <Content Include="IssueManagement\Controls\DIEListHome.ascx" />
+    <Content Include="IssueManagement\Controls\DieRequestFields.ascx" />
+    <Content Include="IssueManagement\Controls\DIEStatus.ascx" />
+    <Content Include="IssueManagement\DieRequestEdit.aspx" />
+    <Content Include="IssueManagement\DieRequestFields.ascx" />
+    <Content Include="IssueManagement\FindIssue.aspx" />
+    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.4.1.js" />
+    <Content Include="Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.16.custom.min.js" />
+    <Content Include="Share\Home.aspx" />
+    <Content Include="Share\Images\complete_background.jpg" />
+    <Content Include="Share\Images\insert_issue.png" />
+    <Content Include="Share\Images\not_complete_backhground.jpg" />
+    <Content Include="Share\Login.aspx" />
+    <Content Include="Share\Logout.aspx" />
+    <Content Include="UserManagement\Controls\UserList.ascx" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Codes\Ultility.cs" />
+    <Compile Include="CategoryManagement\Category.aspx.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CategoryManagement\Category.aspx.designer.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CategoryManagement\Controls\CategoryList.ascx.cs">
+      <DependentUpon>CategoryList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CategoryManagement\Controls\CategoryList.ascx.designer.cs">
+      <DependentUpon>CategoryList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\AddIssue.aspx.cs">
+      <DependentUpon>AddIssue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\AddIssue.aspx.designer.cs">
+      <DependentUpon>AddIssue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DieList.ascx.cs">
+      <DependentUpon>DieList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DieList.ascx.designer.cs">
+      <DependentUpon>DieList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DIEListHome.ascx.cs">
+      <DependentUpon>DIEListHome.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DIEListHome.ascx.designer.cs">
+      <DependentUpon>DIEListHome.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DIEStatus.ascx.cs">
+      <DependentUpon>DIEStatus.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\Controls\DIEStatus.ascx.designer.cs">
+      <DependentUpon>DIEStatus.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\DieRequestEdit.aspx.cs">
+      <DependentUpon>DieRequestEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\DieRequestEdit.aspx.designer.cs">
+      <DependentUpon>DieRequestEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="IssueManagement\FindIssue.aspx.cs">
+      <DependentUpon>FindIssue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IssueManagement\FindIssue.aspx.designer.cs">
+      <DependentUpon>FindIssue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Share\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Share\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Share\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Share\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Share\Master.Master.cs">
+      <DependentUpon>Master.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Share\Master.Master.designer.cs">
+      <DependentUpon>Master.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagement\Controls\UserList.ascx.cs">
+      <DependentUpon>UserList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserManagement\Controls\UserList.ascx.designer.cs">
+      <DependentUpon>UserList.ascx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
+    <Folder Include="Share\Uploads\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Share\Master.Master" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.sitemap" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Themes\Default\Default.skin" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Generated Code\Agile.Data.SqlClient\Agile.Data.SqlClient.csproj">
+      <Project>{8996A7B4-57D3-440B-A545-A701844B8C4A}</Project>
+      <Name>Agile.Data.SqlClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Generated Code\Agile.Data\Agile.Data.csproj">
+      <Project>{041C1BBE-0BFB-4D45-8125-9AB0BBC09A92}</Project>
+      <Name>Agile.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Generated Code\Agile.Entities\Agile.Entities.csproj">
+      <Project>{20E43088-4618-4F4A-B8AD-FC31B50D94CD}</Project>
+      <Name>Agile.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Generated Code\Agile.Services\Agile.Services.csproj">
+      <Project>{794327CE-DC0A-4381-89EE-4C00AFB08D5A}</Project>
+      <Name>Agile.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Generated Code\Agile.Web\Agile.Web.csproj">
+      <Project>{47FE3BE8-3E46-47CA-8494-473755867DD0}</Project>
+      <Name>Agile.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>3892</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
